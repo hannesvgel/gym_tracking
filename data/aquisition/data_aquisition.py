@@ -31,7 +31,7 @@ if not video_path:
 
 
 # Crea e prepara file CSV
-csv_file = open("pose_data.csv", mode='w', newline='')
+csv_file = open("data/raw/pose_data.csv", mode='w', newline='')
 csv_writer = csv.writer(csv_file)
 
 # Scrive l'intestazione: x_0, y_0, z_0, visibility_0, ..., x_32, y_32, z_32, visibility_32
