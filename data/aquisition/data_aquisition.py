@@ -43,7 +43,7 @@ csv_writer.writerow(header)
 cap = cv2.VideoCapture(video_path)
 
 # File CSV per salvare i dati dello scheletro
-csv_file = open("pose_data.csv", mode='w', newline='')
+csv_file = open("data/raw/pose_data.csv", mode='w', newline='')
 csv_writer = csv.writer(csv_file)
 # Intestazione CSV
 header = []
