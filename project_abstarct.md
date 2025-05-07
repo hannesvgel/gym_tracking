@@ -7,7 +7,7 @@ Coluccino Edoardo, Freddo Sara, Girolami Francesca, Vogel Hannes
 Develop a system to descriminate different gym exercises and the correct level of execution
 
 ## Sensor(s) need.
-Phone webacams 
+Phone webacams. 
 
 ## Health data you plan to measure and analyse;
 For each exercise we want to evaluate one common error of execution in order to classify the performance correctness. For example, if we analyze the push-up movement, we would like the head to move above the hands line; so: 
