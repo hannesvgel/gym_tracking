@@ -6,29 +6,29 @@ import os
 from tkinter import filedialog, Tk, simpledialog
 import matplotlib.pyplot as plt
 
-# PARAMETER
+# PARAMETERS
 SEGMENT_FRAME_COUNT = 100
 OUTPUT_FOLDER = "pose_csv_segments"
-SHOW_3D = False  # cambia in True per mostrare stickman 3D
+SHOW_3D = False  # change to True to show 3D stickman
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# MEDIAPIPE
+# MEDIAPIPE SETUP
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(static_image_mode=False)
 mp_draw = mp.solutions.drawing_utils
 connections = list(mp_pose.POSE_CONNECTIONS)
 
-# GUI FILE E LABEL
+# GUI FOR FILE AND LABEL
 Tk().withdraw()
-video_path = filedialog.askopenfilename(title="Seleziona video esercizio")
+video_path = filedialog.askopenfilename(title="Select exercise video")
 if not video_path:
-    print("Nessun video selezionato.")
+    print("No video selected.")
     exit()
 
-label = simpledialog.askstring("Nome Esercizio", "Inserisci il nome dell'esercizio:")
+label = simpledialog.askstring("Exercise Name", "Enter the exercise name:")
 if not label:
-    print("Nessuna label inserita.")
+    print("No label entered.")
     exit()
 
 # VIDEO AND STORAGE
@@ -38,7 +38,7 @@ segments = []
 current_start = None
 all_landmarks = []
 
-# STICKMAN 3D
+# STICKMAN 3D SETUP
 if SHOW_3D:
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -64,7 +64,7 @@ def draw_stickman_3d(landmarks):
     plt.draw()
     plt.pause(0.001)
 
-print("Premi 's' per INIZIO, 'e' per FINE segmento, 'q' per uscire.")
+print("Press 's' to START segment, 'e' to END segment, 'q' to quit.")
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -82,25 +82,25 @@ while cap.isOpened():
         frame_landmarks = [0.0] * (33 * 4)
     all_landmarks.append(frame_landmarks)
 
-    # Disegna stickman sopra il soggetto
+    # Draw stickman over the subject
     if results.pose_landmarks:
         mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
         if SHOW_3D:
             draw_stickman_3d(results.pose_landmarks)
 
-    # Visualizza il frame
+    # Display the frame
     cv2.putText(frame, f"Frame: {frame_idx}", (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-    cv2.imshow("Segmenta il video", frame)
+    cv2.imshow("Segment the video", frame)
 
     key = cv2.waitKey(30) & 0xFF
     if key == ord('s'):
         current_start = frame_idx
-        print(f"[Start] Segmento iniziato al frame {frame_idx}")
+        print(f"[Start] Segment started at frame {frame_idx}")
     elif key == ord('e') and current_start is not None:
         segments.append((current_start, frame_idx))
-        print(f"[End] Segmento salvato da {current_start} a {frame_idx}")
+        print(f"[End] Segment saved from {current_start} to {frame_idx}")
         current_start = None
     elif key == ord('q'):
         break
@@ -131,4 +131,4 @@ for i, (start, end) in enumerate(segments):
 
     output_path = os.path.join(OUTPUT_FOLDER, f"{label}_segment_{i+1}.csv")
     df.to_csv(output_path, index=False)
-    print(f"✅ Segmento {i+1} salvato: {output_path}")
+    print(f"Segment {i+1} saved: {output_path}")
