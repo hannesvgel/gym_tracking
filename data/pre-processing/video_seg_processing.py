@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 # PARAMETERS
 SEGMENT_FRAME_COUNT = 100
-OUTPUT_FOLDER = "data\processed\kaggle_DS"
+OUTPUT_FOLDER = "data\processed\kaggle_video_DS"
 SHOW_3D = False  # change to True to show 3D stickman
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
