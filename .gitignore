@@ -1,3 +1,4 @@
 .venv
 data/raw/pose_data.csv
 data/processed/kaggle_img_DS
+data/processed/kaggle_video_DS
