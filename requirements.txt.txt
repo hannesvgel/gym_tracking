@@ -14,3 +14,4 @@ torchsummary
 mediapipe
 gradio
 kagglehub
+tensorflow
