@@ -5,7 +5,7 @@ from pathlib import Path
 import csv
 
 # === CONFIGURATION ===
-# change these to point at your local Kaggle download
+# !!! change these to point at your local Kaggle download
 INPUT_DIRS = {
     "push_up": r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\push up",
     "squat":   r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\squat",
