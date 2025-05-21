@@ -1,4 +1,5 @@
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
@@ -86,6 +87,26 @@ model.fit(
     epochs=100,
     callbacks=callbacks
 )
+
+# plot training accuracy and loss in subplots
+history = model.history.history
+plt.figure(figsize=(12, 4))
+plt.subplot(1, 2, 1)
+plt.plot(history['accuracy'], label='train accuracy')
+plt.plot(history['val_accuracy'], label='val accuracy')
+plt.title('Model accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend()
+plt.subplot(1, 2, 2)
+plt.plot(history['loss'], label='train loss')
+plt.plot(history['val_loss'], label='val loss')
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend()
+plt.tight_layout()
+plt.show()
 
 # 6. Evaluate on the test set
 print("\n=== Test Set Evaluation ===")
