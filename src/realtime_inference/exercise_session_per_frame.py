@@ -5,8 +5,14 @@ import tensorflow as tf
 from collections import Counter
 
 # ——— CONFIG ———
-MODEL_PATH    = "skeleton_cnn_multiclass.h5"
-CLASSES       = ["push_up", "squat", "pull_up"]
+# MODEL_PATH = "skeleton_cnn_multiclass3.h5"
+# MODEL_PATH = "skeleton_resnet_multiclass3.h5"
+# CLASSES    = ["push_up", "squat", "pull_up"]
+
+MODEL_PATH = "skeleton_cnn_multiclass6.h5"
+# MODEL_PATH = "skeleton_resnet_multiclass6.h5"
+CLASSES    = ["push_up", "squat", "pull_up", "bench_press", "lat_pulldown", "deadlift"]
+
 KEYPOINT_DIM  = 132  # 33 landmarks × (x,y,z,visibility)
 DROP_START    = 5    # number of initial frames to drop
 DROP_END      = 5    # number of final frames to drop

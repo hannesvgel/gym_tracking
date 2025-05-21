@@ -4,8 +4,14 @@ import mediapipe as mp
 import tensorflow as tf
 
 # ——— CONFIG ———
-MODEL_PATH = "skeleton_cnn_multiclass.h5"
-CLASSES    = ["push_up", "squat", "pull_up"]
+# MODEL_PATH = "skeleton_cnn_multiclass3.h5"
+# MODEL_PATH = "skeleton_resnet_multiclass3.h5"
+# CLASSES    = ["push_up", "squat", "pull_up"]
+
+MODEL_PATH = "skeleton_cnn_multiclass6.h5"
+# MODEL_PATH = "skeleton_resnet_multiclass6.h5"
+CLASSES    = ["push_up", "squat", "pull_up", "bench_press", "lat_pulldown", "deadlift"]
+
 KEYPOINT_DIM = 132  # 33 landmarks with x,y,z,visibility
 
 # ——— load trained model ———

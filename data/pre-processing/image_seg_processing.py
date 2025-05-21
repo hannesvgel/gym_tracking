@@ -10,6 +10,9 @@ INPUT_DIRS = {
     "push_up": r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\push up",
     "squat":   r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\squat",
     "pull_up": r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\pull up",
+    "bench_press": r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\bench press",
+    "lat_pulldown": r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\lat pulldown",
+    "deadlift": r"C:\Users\Lenovo\.cache\kagglehub\datasets\hasyimabdillah\workoutexercises-images\versions\15\deadlift"
 }
 
 # base output folder
