@@ -39,7 +39,7 @@ def extract_keypoints_from_results(results):
     return arr.reshape(1, KEYPOINT_DIM, 1)  # shape = (1,132,1)
 
 # ——— start webcam feed ———
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # use cv2.CAP_DSHOW to avoid camera access issues on Windows
 if not cap.isOpened():
     raise RuntimeError("Could not open webcam")
 
