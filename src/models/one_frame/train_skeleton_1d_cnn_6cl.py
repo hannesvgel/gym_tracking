@@ -6,8 +6,8 @@ from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 
 # ——— CONFIG ———
-DATA_DIR     = Path("data/processed/kaggle_img_DS")
-CLASSES      = ["push_up","squat","pull_up", "bench_press", "lat_pulldown", "deadlift"]
+DATA_DIR     = Path("data/processed/own_DS/1_frame_segments/vertical")
+CLASSES      = ["bench_press","bulgarian_squat","lat_machine", "pull_up", "push_up", "split_squat"]
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 
@@ -84,7 +84,7 @@ callbacks = [
 model.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=100,
+    epochs=10,
     callbacks=callbacks
 )
 
