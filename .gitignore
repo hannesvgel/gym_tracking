@@ -1,5 +1,40 @@
-.venv
 data/raw/drive-download/
 data/raw/pose_data.csv
+data/validation/own_DS
+data/processed/own_DS/1_frame_segments
 # data/processed/kaggle_img_DS
 # data/processed/kaggle_video_DS
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.sublime*
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Pycharm/Python cache
+*.egg-info/
+.eggs/
+build/
+dist/
