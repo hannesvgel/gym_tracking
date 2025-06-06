@@ -37,7 +37,7 @@ def classify_session_per_30_frames(MODEL_PATH: str, CLASSES: list[str]):
         return np.array(kpts, dtype=np.float32)  # shape = (132,)
 
     # ——— start webcam feed ———
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # use cv2.CAP_DSHOW to avoid camera access issues on Windows
+    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)  # use cv2.CAP_DSHOW to avoid camera access issues on Windows
     if not cap.isOpened():
         raise RuntimeError("Could not open webcam")
 
@@ -86,7 +86,7 @@ def classify_session_per_30_frames(MODEL_PATH: str, CLASSES: list[str]):
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 else:
                     cv2.putText(frame, "Press 'e' to end",
-                                (10, 30),
+                                (10, 70),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     # extract keypoints & run LSTM
                     keypoints = extract_keypoints_from_results(results)
@@ -105,7 +105,7 @@ def classify_session_per_30_frames(MODEL_PATH: str, CLASSES: list[str]):
                         cv2.putText(frame, text,
                                     (10, 30),
                                     cv2.FONT_HERSHEY_SIMPLEX,
-                                    1, (0, 255, 0), 2, cv2.LINE_AA)
+                                    1, (0, 0, 255), 2, cv2.LINE_AA)
 
                         # Slide the window (optional)
                         sequence.pop(0)
