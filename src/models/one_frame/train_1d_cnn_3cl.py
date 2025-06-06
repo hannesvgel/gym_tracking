@@ -6,8 +6,8 @@ from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 
 # ——— CONFIG ———
-DATA_DIR     = Path("data/processed/kaggle_img_DS")
-CLASSES      = ["push_up","squat","pull_up"]
+DATA_DIR     = Path("data/processed/own_DS/1_frame_segments/vertical")
+CLASSES      = ["pull_up", "push_up", "split_squat"]  # pull_up: 0, push_up: 1, split_squat: 2
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 

@@ -1,7 +1,10 @@
+import os
 import cv2
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
+
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 # ——— CONFIG ———
 # MODEL_PATH = "skeleton_cnn_multiclass3.h5"

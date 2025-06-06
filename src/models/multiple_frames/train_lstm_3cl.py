@@ -7,7 +7,7 @@ import numpy as np
 
 # ——— CONFIG ———
 DATA_DIR     = Path("data/processed/own_DS/30_frame_segments/vertical")
-CLASSES      = ["push_up","split_squat","pull_up"]
+CLASSES      = ["pull_up", "push_up", "split_squat"]  # pull_up: 0, push_up: 1, split_squat: 2
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 
