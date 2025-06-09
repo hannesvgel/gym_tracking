@@ -11,7 +11,7 @@ from collections import Counter
 
 MODEL_PATH = "skeleton_cnn_multiclass6.h5"
 # MODEL_PATH = "skeleton_resnet_multiclass6.h5"
-CLASSES    = ["push_up", "squat", "pull_up", "bench_press", "lat_pulldown", "deadlift"]
+CLASSES      = ["bench_press","bulgarian_squat","lat_machine", "pull_up", "push_up", "split_squat"]
 
 KEYPOINT_DIM  = 132  # 33 landmarks × (x,y,z,visibility)
 DROP_START    = 5    # number of initial frames to drop

@@ -13,7 +13,7 @@ os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 MODEL_PATH = "skeleton_cnn_multiclass6.h5"
 # MODEL_PATH = "skeleton_resnet_multiclass6.h5"
-CLASSES    = ["push_up", "squat", "pull_up", "bench_press", "lat_pulldown", "deadlift"]
+CLASSES      = ["bench_press","bulgarian_squat","lat_machine", "pull_up", "push_up", "split_squat"]
 
 KEYPOINT_DIM = 132  # 33 landmarks with x,y,z,visibility
 
