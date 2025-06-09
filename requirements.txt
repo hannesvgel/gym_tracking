@@ -3,7 +3,7 @@ numpy
 matplotlib
 scipy
 Pillow
-opencv-python
+opencv-python>=4.8.0
 joblib
 scikit-learn
 pandas
@@ -11,7 +11,10 @@ seaborn
 torch
 torchvision
 torchsummary
-mediapipe
+mediapipe>=0.10.0
 gradio
 kagglehub
 tensorflow
+streamlit>=1.24.0
+streamlit-webrtc>=0.47.1
+av>=10.0.0

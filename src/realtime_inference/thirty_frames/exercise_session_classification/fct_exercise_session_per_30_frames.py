@@ -37,7 +37,7 @@ def classify_session_per_30_frames(MODEL_PATH: str, CLASSES: list[str]):
         return np.array(kpts, dtype=np.float32)  # shape = (132,)
 
     # ——— start webcam feed ———
-    cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)  # use cv2.CAP_DSHOW to avoid camera access issues on Windows
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # use cv2.CAP_DSHOW to avoid camera access issues on Windows
     if not cap.isOpened():
         raise RuntimeError("Could not open webcam")
 
