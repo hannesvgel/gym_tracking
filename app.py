@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from flask import Flask, request, jsonify, send_from_directory
 import webbrowser
 import os
@@ -8,20 +7,19 @@ import time
 import numpy as np
 from flask_cors import CORS
 
-# Configurazione Flask
+# Flask Configuration
 app = Flask(__name__, static_folder='static')
-CORS(app)  # Abilita CORS per tutte le rotte
+CORS(app)  # Enable CORS for all routes
 
-# Importazioni per il modello
+# Model imports
 MODEL_AVAILABLE = False
 model = None
 CLASSES = ["bench_press", "bulgarian_squat", "lat_machine", "pull_up", "push_up", "split_squat"]
 SEQUENCE_LENGTH = 30
 KEYPOINT_DIM = 132  # 33 landmarks * 4 (x, y, z, visibility)
 
-# Prova a caricare il modello
+# Try to load the model
 try:
-    import tensorflow as tf
     from tensorflow.keras.models import load_model
     MODEL_AVAILABLE = True
     print("TensorFlow imported successfully")
@@ -40,12 +38,12 @@ except Exception as e:
     print(f"Error loading model: {e}")
     MODEL_AVAILABLE = False
 
-# Rotta principale per servire l'applicazione
+# Main route to serve the application
 @app.route('/')
 def index():
     return send_from_directory('static', 'index.html')
 
-# Rotta per la classificazione
+# Route for classification
 @app.route('/classify', methods=['POST'])
 def classify():
     if not MODEL_AVAILABLE or model is None:
@@ -61,7 +59,7 @@ def classify():
         sequence = data['sequence']
         landmarks_sequence = np.array(sequence, dtype=np.float32)
 
-        # Verifica dimensioni
+        # Check dimensions
         if landmarks_sequence.shape[0] != SEQUENCE_LENGTH:
             return jsonify({
                 'error': f'Invalid sequence length. Expected {SEQUENCE_LENGTH}, got {landmarks_sequence.shape[0]}',
@@ -82,7 +80,7 @@ def classify():
                     'class_name': None
                 }), 400
 
-        # Predizione
+        # Prediction
         input_data = landmarks_sequence.reshape(1, SEQUENCE_LENGTH, expected_frame_size)
         prediction = model.predict(input_data, verbose=0)[0]
         predicted_class = int(np.argmax(prediction))
@@ -111,20 +109,20 @@ def classify():
         }), 500
 
 def open_browser():
-    """Apri il browser dopo un breve delay"""
+    """Open browser after a short delay"""
     time.sleep(2)
     webbrowser.open('http://localhost:8000/')
 
 if __name__ == "__main__":
-    # Verifica che il file HTML esista
+    # Check if HTML file exists
     if not os.path.exists('static/index.html'):
         print("Warning: static/index.html not found")
         print("Make sure your HTML file is in the static directory")
     
-    # Avvia il browser in un thread separato
+    # Start browser in a separate thread
     browser_thread = threading.Thread(target=open_browser)
     browser_thread.daemon = True
     browser_thread.start()
     
-    # Avvia il server Flask
+    # Start Flask server
     app.run(host='0.0.0.0', port=8000, debug=False)

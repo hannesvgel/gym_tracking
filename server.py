@@ -8,7 +8,7 @@ import json
 import threading
 import time
 
-# Importazioni per il modello
+# Imports for the model
 try:
     import numpy as np
     from tensorflow.keras.models import load_model
@@ -19,16 +19,16 @@ except ImportError as e:
     print("Model classification will not be available")
     MODEL_AVAILABLE = False
 
-# Configurazione
+# Configuration
 PORT = 8000
 DIRECTORY = "."
 
-# Configurazione modello
+# Model configuration
 CLASSES = ["bench_press", "bulgarian_squat", "lat_machine", "pull_up", "push_up", "split_squat"]
 SEQUENCE_LENGTH = 30
 KEYPOINT_DIM = 132  # 33 landmarks * 4 (x, y, z, visibility)
 
-# Carica il modello LSTM solo se disponibile
+# Load LSTM model only if available
 model = None
 if MODEL_AVAILABLE:
     try:
@@ -48,14 +48,14 @@ class ExerciseHandler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
     
     def end_headers(self):
-        # Aggiungi headers CORS
+        # Add CORS headers
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         super().end_headers()
     
     def do_OPTIONS(self):
-        # Gestisci richieste preflight CORS
+        # Handle CORS preflight requests
         self.send_response(200)
         self.end_headers()
     
@@ -82,10 +82,10 @@ class ExerciseHandler(http.server.SimpleHTTPRequestHandler):
             data = json.loads(post_data.decode('utf-8'))
             sequence = data['sequence']
 
-            # Converti in numpy array
+            # Convert to numpy array
             landmarks_sequence = np.array(sequence, dtype=np.float32)
 
-            # Verifica dimensioni
+            # Verify dimensions
             if landmarks_sequence.shape[0] != SEQUENCE_LENGTH:
                 self.send_response(400)
                 self.send_header('Content-type', 'application/json')
@@ -116,7 +116,7 @@ class ExerciseHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(json.dumps(response).encode())
                     return
 
-            # Predizione
+            # Prediction
             input_data = landmarks_sequence.reshape(1, SEQUENCE_LENGTH, expected_frame_size)
             prediction = model.predict(input_data, verbose=0)
             predicted_class = int(np.argmax(prediction[0]))
@@ -148,7 +148,7 @@ class ExerciseHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(response).encode())
 
 def start_server():
-    """Avvia il server HTTP"""
+    """Start the HTTP server"""
     with socketserver.TCPServer(("", PORT), ExerciseHandler) as httpd:
         print(f"Server running at http://localhost:{PORT}/")
         print(f"Model available: {MODEL_AVAILABLE}")
@@ -163,21 +163,21 @@ def start_server():
             httpd.shutdown()
 
 def open_browser():
-    """Apri il browser dopo un breve delay"""
+    """Open the browser after a short delay"""
     time.sleep(2)
     webbrowser.open(f'http://localhost:{PORT}/')
 
 if __name__ == "__main__":
-    # Verifica che il file HTML esista
-    html_file = "index.html"  # O il nome del tuo file HTML
+    # Check if HTML file exists
+    html_file = "index.html"  # Or your HTML file name
     if not os.path.exists(html_file):
         print(f"Warning: {html_file} not found in current directory")
         print("Make sure your HTML file is in the same directory as this script")
     
-    # Avvia il browser in un thread separato
+    # Start browser in a separate thread
     browser_thread = threading.Thread(target=open_browser)
     browser_thread.daemon = True
     browser_thread.start()
     
-    # Avvia il server
+    # Start the server
     start_server()
