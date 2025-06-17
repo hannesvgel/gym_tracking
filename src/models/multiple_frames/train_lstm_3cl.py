@@ -18,6 +18,18 @@ for idx, cls in enumerate(CLASSES):
         all_files.append(str(p))
         all_labels.append(idx)
 
+# print number of files for each class
+num_files_dict = {}
+for cls in CLASSES:
+    # get number of files for each class in dict {cls: number of files}
+    num_files = len(list((DATA_DIR/cls).glob('*.csv')))
+    num_files_dict[cls] = num_files
+    print(f"{cls}: {num_files}")
+
+# if not all classes have the same number of files, return error
+if len(set(num_files_dict.values())) != 1:
+    raise ValueError("All classes must have the same number of files")
+
 # 2. Split into train / val+test, then val / test
 files_train, files_tmp, labels_train, labels_tmp = train_test_split(
     all_files, all_labels,
