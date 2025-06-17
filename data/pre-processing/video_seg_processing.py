@@ -10,8 +10,8 @@ from mpl_toolkits.mplot3d import Axes3D
 SEGMENT_LENGTH = 30
 MIN_FINAL_SEGMENT = 20
 SCALE_FACTOR = 0.5
-INPUT_ROOT = r'C:\Users\edoar\gym_tracking\data\raw\drive-download\vertical'
-OUTPUT_ROOT = r'C:\Users\edoar\gym_tracking\data\processed\own_DS\30_frame_segments\vertical'
+INPUT_ROOT = r'C:\Users\hannes\.cache\kagglehub\datasets\philosopher0808\gym-workoutexercises-video\versions\1\processed_data_hannes\push_pull_up'
+OUTPUT_ROOT = r'C:\Users\hannes\01_Code\02_master_rci\03_Semester_PoliMi\02_nearables_lab\gym_tracking\data\processed\kaggle_DS\30_frame_segments'
 SHOW_3D = False  # Enable 3D visualization
 
 # Parameters for image enhancement
@@ -58,7 +58,7 @@ def save_segment(segment, label, output_folder, base_name, video_file, is_final=
     output_path = os.path.join(output_folder, f"{base_name}_{video_base}.csv")
     
     df.to_csv(output_path, index=False)
-    status = "finale upsampled" if is_final else "completo"
+    status = "finale upsampled" if is_final else "complete"
     print(f"Saved {status}: {output_path}")
 
 def enhance_image(frame):
