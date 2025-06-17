@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 
 # ——— CONFIG ———
-DATA_DIR     = Path("data/processed/own_DS/30_frame_segments/vertical")
+DATA_DIR     = Path("data/processed/combined_DS/30_frame_segments")
 CLASSES      = ["pull_up", "push_up", "split_squat"]  # pull_up: 0, push_up: 1, split_squat: 2
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
