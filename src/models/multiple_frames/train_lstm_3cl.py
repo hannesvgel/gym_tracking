@@ -7,7 +7,7 @@ import numpy as np
 
 # ——— CONFIG ———
 DATA_DIR     = Path("data/processed/combined_DS/v2/30_frame_segments")
-CLASSES      = ["pull_up", "push_up", "split_squat"]  # pull_up: 0, push_up: 1, split_squat: 2
+CLASSES      = ["pull_up", "push_up", "squat"]  # pull_up: 0, push_up: 1, squat: 2
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 
@@ -26,9 +26,11 @@ for cls in CLASSES:
     num_files_dict[cls] = num_files
     print(f"{cls}: {num_files}")
 
-'''# if not all classes have the same number of files, return error
+# if not all classes have the same number of files, return error
+'''
 if len(set(num_files_dict.values())) != 1:
-    raise ValueError("All classes must have the same number of files")'''
+    raise ValueError("All classes must have the same number of files")
+'''
 
 # 2. Split into train / val+test, then val / test
 files_train, files_tmp, labels_train, labels_tmp = train_test_split(
