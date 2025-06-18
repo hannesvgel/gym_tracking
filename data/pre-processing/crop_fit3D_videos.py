@@ -20,7 +20,8 @@ def batch_trim_videos(input_dir: str, output_dir: str,
     output_path.mkdir(parents=True, exist_ok=True)
     video_files = list(input_path.glob("*.mp4"))
     # Filter to only include videos with 'push' or 'squat' in the name
-    video_files = [v for v in video_files if 'push' in v.name.lower() or 'squat' in v.name.lower()]
+    video_files = [v for v in video_files if 'push' in v.name.lower() 
+                   or 'squat' in v.name.lower()]
     print(f"Found {len(video_files)} .mp4 files (filtered to push/squat only)")
 
     if not video_files:
@@ -65,11 +66,11 @@ def batch_trim_videos(input_dir: str, output_dir: str,
             sub.close()
             clip.close()
 
-            print("  ✓ Saved:", out)
+            print("Saved:", out)
             processed += 1
 
         except Exception as e:
-            print("  ERROR:", e)
+            print("ERROR:", e)
             error += 1
 
     print(f"\nDone — {processed} succeeded, {error} failed out of {len(video_files)}.")
