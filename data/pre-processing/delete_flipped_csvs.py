@@ -3,7 +3,7 @@ from pathlib import Path
 
 def delete_flipped_files():
     # Path to the directory
-    base_path = Path("data/processed/combined_DS/30_frame_segments")
+    base_path = Path("data/processed/combined_DS/v1/30_frame_segments")
     
     # Get all CSV files with 'flipped' in their name
     flipped_files = list(base_path.rglob("*flipped*.csv"))
