@@ -41,7 +41,7 @@ def flip_keypoints_horizontally_csv(path: str) -> str:
 
 
 if __name__ == '__main__':
-    combined_DS_path = Path("data/processed/combined_DS/v1/30_frame_segments")
+    combined_DS_path = Path("data/processed/combined_DS/v2/30_frame_segments")
     # classes are the folder names under combined_DS_path
     classes = [f.name for f in combined_DS_path.iterdir() if f.is_dir()]
     print("found classes: ", classes)
