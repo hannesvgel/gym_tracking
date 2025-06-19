@@ -4,9 +4,10 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
+from tensorflow.keras.layers import Bidirectional, BatchNormalization
 
 # ——— CONFIG ———
-DATA_DIR     = Path("data/processed/combined_DS/v2/30_frame_segments")
+DATA_DIR     = Path("data/processed/combined_DS/v3/30_frame_segments")
 # bench_press: 0, lat_machine: 1, pull_up: 2, push_up: 3, squat: 4, split_squat: 5
 CLASSES      = ["bench_press" ,"lat_machine", "pull_up", "push_up", "squat", "split_squat"]
 NUM_CLASSES  = len(CLASSES)
@@ -33,6 +34,13 @@ files_val, files_test, labels_val, labels_test = train_test_split(
     random_state=42
 )
 
+def augment(seq, label):
+    noise = tf.random.normal(tf.shape(seq), 0., 0.02)
+    seq = seq + noise
+    shift = tf.random.uniform([], -2, 2, dtype=tf.int32)
+    seq = tf.roll(seq, shift, axis=0)
+    return seq, label
+
 # 3. tf.data pipeline - parse into (30, 132) tesnors (30 frames, 132 keypoints)
 def parse_fn(path, label):
     content = tf.io.read_file(path)
@@ -57,21 +65,21 @@ def parse_fn(path, label):
     return parts, label
 
 
-def make_ds(files, labels, batch_size=32, shuffle=False):
+def make_ds(files, labels, batch_size=32, shuffle=False, augment_fn=None):
     ds = tf.data.Dataset.from_tensor_slices((files, labels))
     if shuffle:
         ds = ds.shuffle(len(files), seed=42)
-    return (ds
-            .map(parse_fn, num_parallel_calls=tf.data.AUTOTUNE)
-            .batch(batch_size)
-            .prefetch(tf.data.AUTOTUNE))
+    ds = ds.map(parse_fn, num_parallel_calls=tf.data.AUTOTUNE)
+    if augment_fn:
+        ds = ds.map(augment_fn, num_parallel_calls=tf.data.AUTOTUNE)
+    return ds.batch(batch_size).prefetch(tf.data.AUTOTUNE)
 
-train_ds = make_ds(files_train, labels_train, shuffle=True)
+train_ds = make_ds(files_train, labels_train, shuffle=True, augment_fn=augment)
 val_ds   = make_ds(files_val,   labels_val,   shuffle=False)
 test_ds  = make_ds(files_test,  labels_test,  shuffle=False)
 
 # 4. LSTM model
-model = tf.keras.Sequential([
+'''model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(30, 132)),
     tf.keras.layers.LSTM(128, return_sequences=True),  # keep full sequence
     tf.keras.layers.Dropout(0.5),
@@ -79,12 +87,23 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(64, activation="relu"),
     tf.keras.layers.Dense(NUM_CLASSES, activation="softmax")
+])'''
+model = tf.keras.Sequential([
+    tf.keras.layers.Input((30, 132)),
+    Bidirectional(tf.keras.layers.LSTM(128, return_sequences=True)),
+    BatchNormalization(),
+    tf.keras.layers.Dropout(0.5),
+    Bidirectional(tf.keras.layers.LSTM(64)),
+    BatchNormalization(),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(64, activation='relu', kernel_regularizer='l2'),
+    tf.keras.layers.Dense(NUM_CLASSES, activation='softmax')
 ])
 
 
 model.compile(
     loss="sparse_categorical_crossentropy",
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3, weight_decay=1e-5),
     metrics=["accuracy"]
 )
 model.summary()
@@ -96,8 +115,14 @@ callbacks = [
         patience=5,
         restore_best_weights=True
     ),
+    tf.keras.callbacks.ReduceLROnPlateau(
+        monitor="val_loss", 
+        factor=0.5, 
+        patience=3, 
+        min_lr=1e-6
+    ),
     tf.keras.callbacks.ModelCheckpoint(
-        "skeleton_lstm_multiclass6.h5",
+        "skeleton_lstm_bidirmulticlass6.h5",
         save_best_only=True,
         monitor="val_loss"
     )
