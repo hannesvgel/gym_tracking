@@ -1,3 +1,4 @@
+import yaml
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -7,9 +8,12 @@ import numpy as np
 from tensorflow.keras.layers import Bidirectional, BatchNormalization
 
 # ——— CONFIG ———
-DATA_DIR     = Path("data/processed/combined_DS/v3/30_frame_segments")
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+
+DATA_DIR     = Path(config["data_dir_comb_v3"])
 # bench_press: 0, squat: 1, lat_machine: 2, pull_up: 3, push_up: 4, split_squat: 5
-CLASSES      = ["bench_press", "squat","lat_machine", "pull_up", "push_up", "split_squat"]
+CLASSES      = config["class_names_6cl"]
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 
@@ -107,6 +111,7 @@ model.compile(
     metrics=["accuracy"]
 )
 model.summary()
+model_name = "lstm_bidir_" + str(NUM_CLASSES) + "cl.h5"
 
 # 5. Train with early stopping and best‐model checkpointing
 callbacks = [
@@ -122,7 +127,7 @@ callbacks = [
         min_lr=1e-6
     ),
     tf.keras.callbacks.ModelCheckpoint(
-        "skeleton_lstm_bidir_multiclass6.h5",
+        model_name,
         save_best_only=True,
         monitor="val_loss"
     )

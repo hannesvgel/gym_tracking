@@ -1,0 +1,50 @@
+data_dir_comb_v3: data/processed/combined_DS/v3/30_frame_segments
+class_names_6cl:
+  - bench_press
+  - squat
+  - lat_machine
+  - pull_up
+  - push_up
+  - split_squat
+class_names_3cl:
+  - pull_up
+  - push_up
+  - squat
+
+lstm_bidir_6cl:
+  path: lstm_bidir_6cl.h5
+  class_names:
+    - bench_press
+    - squat
+    - lat_machine
+    - pull_up
+    - push_up
+    - split_squat
+  data_dir: data/processed/combined_DS/v3/30_frame_segments
+
+lstm_bidir_3cl:
+  path: lstm_bidir_3cl.h5
+  class_names:
+    - pull_up
+    - push_up
+    - squat
+  data_dir: data/processed/combined_DS/v3/30_frame_segments
+
+cnn_6cl:
+  path: cnn_6cl.h5
+  class_names:
+    - bench_press
+    - squat
+    - lat_machine
+    - pull_up
+    - push_up
+    - split_squat
+  data_dir: data/processed/combined_DS/v3/30_frame_segments
+
+cnn_3cl:
+  path: cnn_3cl.h5
+  class_names:
+    - pull_up
+    - push_up
+    - squat
+  data_dir: data/processed/combined_DS/v3/30_frame_segments
