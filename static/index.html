@@ -1103,7 +1103,7 @@
 
                     // Configure model parameters
                     this.pose.setOptions({
-                        modelComplexity: 1,          // Model complexity (0=lite, 1=full, 2=heavy)
+                        modelComplexity: 2,          // Model complexity (0=lite, 1=full, 2=heavy)
                         smoothLandmarks: true,       // Enable landmark smoothing between frames
                         enableSegmentation: false,   
                         smoothSegmentation: false,   
@@ -1345,15 +1345,15 @@
 
                         // Define form validation conditions
                         const cond1 = ang1 <= 80 || ang2 <= 80;     // Shoulder position check
-                        const cond2 = ang3 <= 95 || ang4 <= 95;     // Elbow bend check
+                        const cond2 = ang3 <= 80 || ang4 <= 80;     // Elbow bend check
                         const cond3 = (160 <= ang5 && ang5 <= 200) || (160 <= ang6 && ang6 <= 200); // Hip stability
-                        const cond4 = minimum3.value <= 95 || minimum4.value <= 95; // Full range check
+                        const cond4 = minimum3.value <= 80 || minimum4.value <= 80; // Full range check
 
                         // Provide feedback based on form analysis
                         if (cond1 && cond2 && cond3) {
                             feedback = "Bench-press - Correct Execution!";
                             color = "correct";
-                        } else if (!cond4 && (minimum3.value <= 160 || minimum4.value <= 160)) {
+                        } else if (!cond4 && (minimum3.value <= 170 || minimum4.value <= 170)) {
                             feedback = "Bend your arms more until they reach parallel!";
                             color = "warning";
                         }
@@ -1374,8 +1374,8 @@
                         const angleR = this.calculateAngle(hipR, kneeR, ankleR);
 
                         // Detect local minimums for full squat depth
-                        const minimumL = this.findLocalMinimum(this.angleHistory.bulgarian_squat.angleL, angleL);
-                        const minimumR = this.findLocalMinimum(this.angleHistory.bulgarian_squat.angleR, angleR);
+                        const minimumL = this.findLocalMinimum(this.angleHistory.squat.angleL, angleL);
+                        const minimumR = this.findLocalMinimum(this.angleHistory.squat.angleR, angleR);
                         
                         // Define squat form validation conditions
                         const cond1 = toeL[0] <= kneeL[0];  
@@ -1438,7 +1438,7 @@
                         if (cond1 && cond2 && cond3) {
                             feedback = "Lat machine - Correct Execution!";
                             color = "correct";
-                        } else if (!cond6 && (minimum1.value <= 170 || minimum2.value <= 170)) {
+                        } else if (!cond6 && (minimum1.value <= 140 || minimum2.value <= 140)) {
                             feedback = "Bend your arms more to overcome the bar with your chin!";
                             color = "warning";
                         } else if (cond4) {
@@ -1471,21 +1471,21 @@
                         const ang4 = this.calculateAngle(rShoulder, rHip, rKnee);
                         
                         // Track elbow angle minimums for range check
-                        const minimum1 = this.findLocalMinimum(this.angleHistory.lat_machine.ang1, ang1);
-                        const minimum2 = this.findLocalMinimum(this.angleHistory.lat_machine.ang2, ang2);
+                        const minimum1 = this.findLocalMinimum(this.angleHistory.pull_up.ang1, ang1);
+                        const minimum2 = this.findLocalMinimum(this.angleHistory.pull_up.ang2, ang2);
 
                         // Define pull-up form conditions
                         const cond1 = (lLowhead[1] < lWrist[1] && rLowhead[1] < rWrist[1] && 
                                     rLowhead[1] < lWrist[1] && lLowhead[1] < rWrist[1]); 
                         const cond2 = ang1 <= 95 || ang2 <= 95;     
                         const cond3 = (165 <= ang3) || (165 <= ang4);
-                        const cond4 = minimum1.value <= 95 || minimum2.value <= 95; 
+                        const cond4 = minimum1.value <= 80 || minimum2.value <= 80; 
 
                         // Provide pull-up feedback
                         if (cond1 && cond2 && cond3) {
                             feedback = "Pull-up - Correct Execution!";
                             color = "correct";
-                        } else if ((!cond4 && (minimum1.value <= 170 || minimum2.value <= 170)) || !cond1) {
+                        } else if (!cond4 && !cond1 && (minimum1.value <= 160 || minimum2.value <= 160)) {
                             feedback = "Bend your arms more to overcome the bar with your chin!";
                             color = "warning";
                         } else if (!cond3) {
@@ -1565,10 +1565,10 @@
                         // Define split squat form conditions
                         const cond1 = toeL[0] <= kneeL[0];  
                         const cond2 = toeR[0] <= kneeR[0];  
-                        const cond3 = minimumL.value <= 95; 
-                        const cond4 = minimumR.value <= 95; 
-                        const cond5 = angleL <= 95;         
-                        const cond6 = angleR <= 95;         
+                        const cond3 = minimumL.value <= 90; 
+                        const cond4 = minimumR.value <= 90; 
+                        const cond5 = angleL <= 90;         
+                        const cond6 = angleR <= 90;         
 
                         // Determine which leg is forward and provide appropriate feedback
                         if (toeL[0] < toeR[0]) { // Left leg forward
@@ -1592,7 +1592,7 @@
                             } else if (!cond2 && cond6) {
                                 feedback = "Right knee further forward than the tip of the foot";
                                 color = "warning";
-                            } else if (!cond4 && minimumR.value <= 150 && (toeL[0] >= hipL[0] || toeR[0] >= hipR[0])) {
+                            } else if (!cond4 && minimumR.value <= 140 && (toeL[0] >= hipL[0] || toeR[0] >= hipR[0])) {
                                 feedback = "Bend the right leg more, until reaching parallel";
                                 color = "warning";
                             } else if (cond6 && (toeL[0] <= hipL[0] && toeR[0] <= hipR[0])) {
