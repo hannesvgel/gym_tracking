@@ -38,8 +38,8 @@ try:
     print("TensorFlow imported successfully")
     
     # Check model file existence
-    if os.path.exists('skeleton_lstm_multiclass6.h5'):
-        model = load_model('skeleton_lstm_multiclass6.h5')
+    if os.path.exists('lstm_bidir_6cl.h5'):
+        model = load_model('lstm_bidir_6cl.h5')
         print("Model loaded successfully")
         print(f"Model input shape: {model.input_shape}")
     else:
