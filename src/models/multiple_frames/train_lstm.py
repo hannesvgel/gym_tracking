@@ -11,7 +11,7 @@ from tensorflow.keras.layers import Bidirectional, BatchNormalization
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
-DATA_DIR     = Path(config["data_dir_comb_v3"])
+DATA_DIR     = Path(config["data_dir_comb_v3_30f"])
 # bench_press: 0, squat: 1, lat_machine: 2, pull_up: 3, push_up: 4, split_squat: 5
 CLASSES      = config["class_names_6cl"]
 NUM_CLASSES  = len(CLASSES)
