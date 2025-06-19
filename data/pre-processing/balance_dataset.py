@@ -1,10 +1,8 @@
-import os
-import pandas as pd
-import numpy as np
-from pathlib import Path
 import random
+import pandas as pd
+from pathlib import Path
 
-def flip_keypoints_horizontally_csv(path: str) -> str:
+def flip_keypoints_horizontally_csv(path: Path) -> Path:
     """
     Read a CSV of MediaPipe keypoints (one row per frame), flip horizontally,
     swap left/right landmark blocks, and save to a new CSV file.
@@ -34,68 +32,102 @@ def flip_keypoints_horizontally_csv(path: str) -> str:
         temp = df[left_block].copy()
         df[left_block] = df[right_block]
         df[right_block] = temp
-    out_path = Path(path).with_name(Path(path).stem + '_flipped' + Path(path).suffix)
+
+    out_path = path.with_name(path.stem + '_flipped' + path.suffix)
     df.to_csv(out_path, index=False)
     print(f'Saved flipped skeletons to: {out_path}')
-    return str(out_path)
+    return out_path
 
+def get_total_count(folder: Path) -> int:
+    """Count all CSV files (including flipped) in the folder."""
+    return len(list(folder.glob('*.csv')))
+
+def balance_class(folder: Path, max_files: int) -> int:
+    """
+    Balance one class folder to exactly max_files total CSVs by
+    - augmenting via horizontal flips of '_o_' then '_k_' files, and
+    - if in excess, deleting random '_k_' originals.
+    Returns the new total count.
+    """
+    current = get_total_count(folder)
+    delta = max_files - current
+
+    # --- AUGMENT if we're below the target ---
+    if delta > 0:
+        # candidates for flipping (_o_ first)
+        origs = [
+            p for p in folder.glob('*.csv')
+            if '_o_' in p.stem and '_flipped' not in p.stem
+        ]
+        ks = [
+            p for p in folder.glob('*.csv')
+            if '_k_' in p.stem and '_flipped' not in p.stem
+        ]
+
+        to_flip_o = min(delta, len(origs))
+        for p in random.sample(origs, to_flip_o):
+            flip_keypoints_horizontally_csv(p)
+        delta -= to_flip_o
+        if to_flip_o:
+            print(f"  Augmented {to_flip_o} '_o_' files")
+
+        to_flip_k = min(delta, len(ks))
+        for p in random.sample(ks, to_flip_k):
+            flip_keypoints_horizontally_csv(p)
+        delta -= to_flip_k
+        if to_flip_k:
+            print(f"  Augmented {to_flip_k} '_k_' files")
+
+        if delta > 0:
+            print(f"  Warning: shortage of candidates, {delta} more needed")
+
+    # --- PRUNE if we're above the target ---
+    elif delta < 0:
+        # only delete from original '_k_' files (not flips)
+        k_files = [
+            p for p in folder.glob('*.csv')
+            if '_k_' in p.stem and '_flipped' not in p.stem
+        ]
+        n_delete = min(len(k_files), abs(delta))
+        for p in random.sample(k_files, n_delete):
+            p.unlink()
+            print(f"  Deleted {p.name}")
+        delta += n_delete
+        if delta < 0:
+            print(f"  Warning: still {abs(delta)} excess files (no more '_k_' originals)")
+
+    return get_total_count(folder)
 
 if __name__ == '__main__':
-    combined_DS_path = Path("data/processed/combined_DS/v2/30_frame_segments")
-    # classes are the folder names under combined_DS_path
-    classes = [f.name for f in combined_DS_path.iterdir() if f.is_dir()]
-    print("found classes: ", classes)
+    combined_DS_path = Path("data/processed/combined_DS/v3/30_frame_segments")
 
-    # Count files per class
-    num_files_dict = {cls: len(list((combined_DS_path/cls).glob('*.csv'))) for cls in classes}
-    for cls, count in num_files_dict.items():
-        print(f"{cls}: {count} files")
-    
-    # get the max number of files
-    max_files = max(num_files_dict.values())
-    print("max number of files: ", max_files)
+    # discover classes
+    classes = [d for d in combined_DS_path.iterdir() if d.is_dir()]
+    print("Found classes:", [d.name for d in classes])
 
-    # go through each class and add  files, if the class has less than max_files, add the difference to the class
+    # initial counts
+    initial_counts = {cls.name: get_total_count(cls) for cls in classes}
+    for name, cnt in initial_counts.items():
+        print(f"  {name}: {cnt} files")
+
+    # compute the maximum
+    max_files = max(initial_counts.values())
+    max_files = 800
+    print("\nBalancing all classes to", max_files, "files each...\n")
+
+    # balance each
+    final_counts = {}
     for cls in classes:
-        cls_path = combined_DS_path / cls
-        current = len(list(cls_path.glob('*.csv')))
-        needed = max_files - current
-        print(f"\nClass {cls}: current {current}, target {max_files}, need {needed} flips")
+        print(f"Class {cls.name}:")
+        new_cnt = balance_class(cls, max_files)
+        final_counts[cls.name] = new_cnt
+        print(f"  New total: {new_cnt}\n")
 
-        # 1) Flip from original ('_o_') files (exclude already-flipped outputs)
-        if needed > 0:
-            orig_candidates = [
-                p for p in cls_path.glob('*.csv')
-                if '_o_' in p.name 
-                and '_flipped' not in p.name
-                and not (cls_path / f"{p.stem}_flipped{p.suffix}").exists()
-            ]
-            to_flip = min(needed, len(orig_candidates))
-            if to_flip > 0:
-                for p in random.sample(orig_candidates, to_flip):
-                    flip_keypoints_horizontally_csv(p)
-                needed -= to_flip
-                print(f"Flipped {to_flip} original (_o_) files, still need {needed}")
-
-        # 2) Flip from 'k' files if still needed (exclude already-flipped outputs)
-        if needed > 0:
-            k_candidates = [
-                p for p in cls_path.glob('*.csv')
-                if '_k_' in p.name
-                and '_flipped' not in p.name
-                and not (cls_path / f"{p.stem}_flipped{p.suffix}").exists()
-            ]
-            to_flip_k = min(needed, len(k_candidates))
-            if to_flip_k > 0:
-                for p in random.sample(k_candidates, to_flip_k):
-                    flip_keypoints_horizontally_csv(p)
-                needed -= to_flip_k
-                print(f"Flipped {to_flip_k} k files, still need {needed}")
-
-        if needed > 0:
-            print(f"Warning: only satisfied part of the deficit for {cls}, {needed} more flips needed (no more candidates).")
-
-    if all(count == max_files for count in num_files_dict.values()):
+    # summary
+    if all(cnt == max_files for cnt in final_counts.values()):
         print("Perfectly balanced dataset!")
     else:
-        print("Dataset is not perfectly balanced.")
+        print("Dataset still unbalanced:")
+        for name, cnt in final_counts.items():
+            if cnt != max_files:
+                print(f"  {name}: {cnt} files (target {max_files})")

@@ -2,7 +2,7 @@ import os
 import shutil
 
 folder_names = ['bench_press', 'lat_machine', 'pull_up', 'push_up', 'split_squat', 'squat']
-output_dir = r'C:\Users\hannes\01_Code\02_master_rci\03_Semester_PoliMi\02_nearables_lab\gym_tracking\data\processed\combined_DS\v2\30_frame_segments'
+output_dir = r'C:\Users\hannes\01_Code\02_master_rci\03_Semester_PoliMi\02_nearables_lab\gym_tracking\data\processed\combined_DS\v3\30_frame_segments'
 
 db_folders = {
     'k': r'C:\Users\hannes\01_Code\02_master_rci\03_Semester_PoliMi\02_nearables_lab\gym_tracking\data\processed\kaggle_DS\30_frame_segments',
