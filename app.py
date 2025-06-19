@@ -33,7 +33,6 @@ KEYPOINT_DIM = 132     # Keypoint dimension (33 landmarks * 4 coordinates: x, y,
 # MODEL LOADING
 # Attempt to load TensorFlow model
 try:
-    import tensorflow as tf
     from tensorflow.keras.models import load_model
     MODEL_AVAILABLE = True
     print("TensorFlow imported successfully")
@@ -163,6 +162,7 @@ if __name__ == "__main__":
         print("Warning: static/index.html not found")
         print("Make sure your HTML file is in the static directory")
     
+    # Start browser in a separate thread
     # Start browser in a separate thread
     browser_thread = threading.Thread(target=open_browser)
     browser_thread.daemon = True 

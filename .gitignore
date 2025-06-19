@@ -4,6 +4,11 @@ data/validation/own_DS
 data/processed/own_DS/1_frame_segments
 # data/processed/kaggle_img_DS
 # data/processed/kaggle_video_DS
+data/processed/kaggle_DS/30_frame_segments
+# data/processed/kaggle_DS
+data/processed/combined_DS/v2
+data/processed/combined_DS/v3
+data/processed/fit3D_DS
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

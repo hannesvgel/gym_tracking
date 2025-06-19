@@ -10,9 +10,10 @@ from mpl_toolkits.mplot3d import Axes3D
 SEGMENT_LENGTH = 30
 MIN_FINAL_SEGMENT = 20
 SCALE_FACTOR = 0.5
-INPUT_ROOT = r'C:\Users\edoar\gym_tracking\data\raw\drive-download\vertical'
-OUTPUT_ROOT = r'C:\Users\edoar\gym_tracking\data\processed\own_DS\30_frame_segments\vertical'
+INPUT_ROOT = r'C:\Users\hannes\.cache\fit3D\train\cropped_data_hannes'
+OUTPUT_ROOT = r'C:\Users\hannes\01_Code\02_master_rci\03_Semester_PoliMi\02_nearables_lab\gym_tracking\data\processed\fit3D_DS\30_frame_segments'
 SHOW_3D = False  # Enable 3D visualization
+SHOW_VIDEO = False  # Enable video display (set to False for faster processing)
 
 # Parameters for image enhancement
 CONTRAST_ALPHA = 1.0  # Value between 1.0-3.0 (1.0 = no change)
@@ -58,7 +59,7 @@ def save_segment(segment, label, output_folder, base_name, video_file, is_final=
     output_path = os.path.join(output_folder, f"{base_name}_{video_base}.csv")
     
     df.to_csv(output_path, index=False)
-    status = "finale upsampled" if is_final else "completo"
+    status = "finale upsampled" if is_final else "complete"
     print(f"Saved {status}: {output_path}")
 
 def enhance_image(frame):
@@ -114,9 +115,10 @@ def process_folder(folder_path, label, output_base):
                 segment_counter = 1
                 current_segment = []
                 
-                # Set up display window
-                window_name = f"Analysis: {folder_name} - Label {label}"
-                cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+                # Set up display window only if video display is enabled
+                if SHOW_VIDEO:
+                    window_name = f"Analysis: {folder_name} - Label {label}"
+                    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
                 
                 # Set up 3D plot if enabled
                 if SHOW_3D:
@@ -137,24 +139,25 @@ def process_folder(folder_path, label, output_base):
                     # Landmark detection
                     results = pose.process(img_rgb)
                     
-                    # Draw 2D stickman
-                    if results.pose_landmarks:
+                    # Draw 2D stickman only if video display is enabled
+                    if SHOW_VIDEO and results.pose_landmarks:
                         mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
                         
                         # 3D visualization
                         if SHOW_3D:
                             draw_stickman_3d(results.pose_landmarks, ax)
                     
-                    # Display frame with overlay
-                    display_frame = cv2.resize(frame, (0,0), fx=SCALE_FACTOR, fy=SCALE_FACTOR)
-                    cv2.putText(display_frame, 
-                               f"{folder_name} - Frame: {frame_idx}", 
-                               (10,30), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 
-                               0.7, 
-                               (0,255,0), 
-                               2)
-                    cv2.imshow(window_name, display_frame)
+                    # Display frame with overlay only if video display is enabled
+                    if SHOW_VIDEO:
+                        display_frame = cv2.resize(frame, (0,0), fx=SCALE_FACTOR, fy=SCALE_FACTOR)
+                        cv2.putText(display_frame, 
+                                   f"{folder_name} - Frame: {frame_idx}", 
+                                   (10,30), 
+                                   cv2.FONT_HERSHEY_SIMPLEX, 
+                                   0.7, 
+                                   (0,255,0), 
+                                   2)
+                        cv2.imshow(window_name, display_frame)
                     
                     # Extract landmark data
                     frame_data = []
@@ -174,8 +177,8 @@ def process_folder(folder_path, label, output_base):
                     
                     frame_idx += 1
                     
-                    # Early exit check
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                    # Early exit check only if video display is enabled
+                    if SHOW_VIDEO and cv2.waitKey(1) & 0xFF == ord('q'):
                         break
                 
                 # Handle last segment
@@ -185,7 +188,8 @@ def process_folder(folder_path, label, output_base):
                                f"{folder_name}_part{segment_counter}", video_file, True)
                 
                 cap.release()
-                cv2.destroyWindow(window_name)
+                if SHOW_VIDEO:
+                    cv2.destroyWindow(window_name)
                 if SHOW_3D:
                     plt.close(fig)
                 
@@ -194,7 +198,8 @@ def process_folder(folder_path, label, output_base):
     finally:
         if cap and cap.isOpened():
             cap.release()
-        cv2.destroyAllWindows()
+        if SHOW_VIDEO:
+            cv2.destroyAllWindows()
         if SHOW_3D and 'fig' in locals():
             plt.close(fig)
 

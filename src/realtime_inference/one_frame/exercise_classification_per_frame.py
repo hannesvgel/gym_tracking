@@ -1,5 +1,6 @@
 import os
 import cv2
+import yaml
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
@@ -7,11 +8,11 @@ import tensorflow as tf
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 # ——— CONFIG ———
-# MODEL_PATH = "skeleton_cnn_multiclass3.h5"
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
 
-MODEL_PATH = "skeleton_cnn_multiclass6.h5"
-# bench_press: 0, bulgarian_squat: 1, lat_machine: 2, pull_up: 3, push_up: 4, split_squat: 5
-CLASSES      = ["bench_press","bulgarian_squat","lat_machine", "pull_up", "push_up", "split_squat"]
+MODEL_PATH = config["cnn_6cl"]["path"]
+CLASSES = config["cnn_6cl"]["class_names"]
 
 KEYPOINT_DIM = 132  # 33 landmarks with x,y,z,visibility
 
