@@ -14,7 +14,7 @@ st.set_page_config(page_title="Live Exercise Classifier", layout="wide")
 st.title("Gym Tracking App")
 
 MODEL_PATH      = "skeleton_cnn_multiclass3.h5"
-CLASSES         = ["pull_up", "push_up", "split_squat"]  # pull_up: 0, push_up: 1, split_squat: 2 
+CLASSES         = ["pull_up", "push_up", "squat"]  # pull_up: 0, push_up: 1, squat: 2 
 
 KEYPOINT_DIM    = 132
 SEQUENCE_LENGTH = 1

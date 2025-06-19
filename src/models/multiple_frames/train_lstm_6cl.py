@@ -8,8 +8,8 @@ from tensorflow.keras.layers import Bidirectional, BatchNormalization
 
 # ——— CONFIG ———
 DATA_DIR     = Path("data/processed/combined_DS/v3/30_frame_segments")
-# bench_press: 0, lat_machine: 1, pull_up: 2, push_up: 3, squat: 4, split_squat: 5
-CLASSES      = ["bench_press" ,"lat_machine", "pull_up", "push_up", "squat", "split_squat"]
+# bench_press: 0, squat: 1, lat_machine: 2, pull_up: 3, push_up: 4, split_squat: 5
+CLASSES      = ["bench_press", "squat","lat_machine", "pull_up", "push_up", "split_squat"]
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 
@@ -122,7 +122,7 @@ callbacks = [
         min_lr=1e-6
     ),
     tf.keras.callbacks.ModelCheckpoint(
-        "skeleton_lstm_bidirmulticlass6.h5",
+        "skeleton_lstm_bidir_multiclass6.h5",
         save_best_only=True,
         monitor="val_loss"
     )
