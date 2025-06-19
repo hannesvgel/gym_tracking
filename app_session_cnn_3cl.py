@@ -2,6 +2,7 @@ import time
 import av
 import cv2
 import queue
+import yaml
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
@@ -13,8 +14,11 @@ from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
 st.set_page_config(page_title="Live Exercise Classifier", layout="wide")
 st.title("Gym Tracking App")
 
-MODEL_PATH      = "skeleton_cnn_multiclass3.h5"
-CLASSES         = ["pull_up", "push_up", "squat"]  # pull_up: 0, push_up: 1, squat: 2 
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+
+MODEL_PATH = config["cnn_6cl"]["path"]
+CLASSES = config["cnn_6cl"]["class_names"] 
 
 KEYPOINT_DIM    = 132
 SEQUENCE_LENGTH = 1

@@ -1,6 +1,7 @@
 import av
 import cv2
 import queue
+import yaml
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
@@ -12,16 +13,17 @@ from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
 st.set_page_config(page_title="Live Exercise Classifier", layout="wide")
 st.title("Gym Tracking App")
 
-# MODEL_PATH = "skeleton_lstm_multiclass3.h5"
-MODEL_PATH = 'skeleton_lstm_multiclass6.h5'
-CLASSES    = ["bench_press", "lat_machine", "pull_up", "push_up", "squat", "split_squat"]  # pull_up: 0, push_up: 1, split_squat: 2 
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+
+MODEL_PATH = config["lstm_bidir_6cl"]["path"]
+CLASSES = config["lstm_bidir_6cl"]["class_names"]
 
 KEYPOINT_DIM    = 132
 SEQUENCE_LENGTH = 30
 DROP_START      = 2
 DROP_END        = 2
 
-# 
 for key, default in {
     'session_active': False,
     'prev_session_active': False,       # track previous run’s flag
