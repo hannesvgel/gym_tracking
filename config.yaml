@@ -1,4 +1,7 @@
-data_dir_comb_v3: data/processed/combined_DS/v3/30_frame_segments
+data_dir_comb_v3_30f: data/processed/combined_DS/v3/30_frame_segments
+data_dir_comb_v3_1f: data/processed/combined_DS/v3/1_frame_segments
+data_dir_own_1f: data/processed/own_DS/1_frame_segments/vertical
+
 class_names_6cl:
   - bench_press
   - squat
