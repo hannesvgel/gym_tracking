@@ -6,16 +6,16 @@ Then, the evaluattion of the performance correctness is done using some paramter
 A web app has been finally created as interface between our models and the user.
 # Pipeline:
 Data acquisition
-1) 3 phone webcams in a fixed reference system
+1) Three phone webcams in a fixed reference system
 2) Different subjects
-3) 6 possible exercises (bulgarian squat, squat, push-up, pull-up, lat machine, bench press)
+3) Different possible exercises (bulgarian squat, squat, push-up, pull-up, lat machine, bench press)
 4) Multiple series (correct and wrong execution)
 
 Pre-processing:
 1) cutting of the videos in single repetitions
 2) from the acquired videos, we want to extract the joints coordinates over time taken from the best point of view (best camera), which will be given as input to the first AI model. This model will classify which exercise the subject is performing.
 
-Quality evaluation: another model will evaluate the performance of the execution
+Quality evaluation
 
 Future goal:
 1) reconstruct the joint coordinates using all the three cameras instead of just one for a better reconstruction.
