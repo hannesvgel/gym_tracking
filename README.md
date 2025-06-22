@@ -146,6 +146,6 @@ gym_tracking/
 
 ## 5. Authors
 - Coluccino Edoardo ()
-- Freddo Sara ()
+- Freddo Sara (10740747)
 - Girolami Francesca ()
 - Vogel Hannes (11109115)
