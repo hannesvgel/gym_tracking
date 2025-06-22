@@ -50,7 +50,7 @@ python app.py
 ## 4. Project Structure & Purpose
 
 **Project goal:** Development of a system to descriminate different gym exercises and the correctness of execution. Two models were created, one able to discriminate between 3 different exercises and the other one between 6 exercises. This was done in order to make the classification task more difficult for the model: in fact, the last three exercises were paired to the first three because of a similar execution. The paired exercises are: squat and split squat, push-up and bench press, pull-up and lat pull-down. In this way the model created is better in discriminate between different movements.
-Then, the evaluation of the performance correctness is done using some paramteres like, for example, the joint angle of a certain articulation.
+Then, the evaluation of the performance correctness is done using some parameters like, for example, the joint angle of a certain articulation.
 A web app has been finally created as interface between our models and the user.
 
 ```css
@@ -66,7 +66,7 @@ gym_tracking/           # root
 ├── requirements.txt    # required dependencies
 ```
 
-The following Sections detail each of the main building blocks of the Code and pipeline from data aquisition to the final webapp.The following sections describe the main building blocks of the code and pipeline, from data acquisition to the final web app.
+The following sections describe the main building blocks of the code and pipeline, from data acquisition to the final web app.
 
 ### 4.1 Datasets & Pre-Processing
 ```css
