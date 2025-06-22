@@ -80,17 +80,20 @@ gym_tracking/
 
 **TODO Hannes:** Section about the different Datasets, how we processed the Data & how we got to our final DS.
 
-To be included:
-```
-Data acquisition
-1) Three phone webcams in a fixed reference system
-2) Different subjects
-3) Different possible exercises (split squat, squat, push-up, pull-up, lat pull-down, bench press)
-4) Multiple series (correct and wrong execution)
+#### 4.1.1 Our Dataset (from video acquisitions)
+Data acquisition:
+1) We used three phone webcams in a fixed reference system
+2) We considered different subjects
+3) Every subject executed different possible exercises (split squat, squat, push-up, pull-up, lat pull-down, bench press)
+4) Every subject executed multiple series (correct and wrong execution) of the same exercise
+
+At the end of the acquisition part, we obtained videos for each subject and for each exercise executed. Inside each video, a lot of repetitions of the same movement were present.
 
 Pre-processing:
-1) cutting of the videos in single repetitions
-2) from the acquired videos, we want to extract the joints coordinates over time taken from the best point of view (best camera), which will be given as input to the first AI model. This model will classify which exercise the subject is performing.
+1) manual cutting of the videos in single repetitions 
+2) splitting of the videos of the single ripetitions in segments of 30 consequetive frames, in order to reduce the computational load.
+
+These 30 consecutive frames for all the repetitions done will be the input for the classification and evaluation model.
 ```
 
 ### 4.2 Exercise Classification
