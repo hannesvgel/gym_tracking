@@ -46,6 +46,8 @@ To start the web app, navigate to the project root and run:
 ```bash
 python app.py
 ```
+The server will start on http://localhost:8000 and automatically open the browser;
+If it doesn't open automatically, click on the link http://localhost:8000 shown in the terminal
 
 ## 4. Project Structure & Purpose
 
@@ -94,7 +96,7 @@ Pre-processing:
 2) splitting of the videos of the single ripetitions in segments of 30 consequetive frames, in order to reduce the computational load.
 
 These 30 consecutive frames for all the repetitions done will be the input for the classification and evaluation model.
-```
+
 
 ### 4.2 Exercise Classification
 ```css
