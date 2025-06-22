@@ -1,77 +1,56 @@
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
 
-def flip_keypoints_horizontally(keypoints: list) -> np.array:
+def flip_keypoints_horizontally(keypoints: tf.Tensor) -> tf.Tensor:
+    """
+    keypoints: tf.Tensor of shape (frames, 132)
+    Assumes x coordinates are every 4th column starting at 0,
+    and that mirror_pairs is a list of (left_block_idx, right_block_idx).
+    """
+    frames = tf.shape(keypoints)[0]
+    dim = tf.shape(keypoints)[1]
 
-    sequence_flipped = []
+    # 1) Flip all x-coords (every 4th column starting at 0):
+    x_cols = tf.range(0, dim, 4)                       # [0, 4, 8, …]
+    rows = tf.range(frames)
+    rows_mat, cols_mat = tf.meshgrid(rows, x_cols, indexing='ij')
+    idxs = tf.stack([rows_mat, cols_mat], axis=-1)     # shape [frames, num_x, 2]
+    idxs_flat = tf.reshape(idxs, [-1, 2])              # shape [frames*num_x, 2]
+    orig_x = tf.gather_nd(keypoints, idxs_flat)
+    flipped_x = 1.0 - orig_x
+    keypoints = tf.tensor_scatter_nd_update(keypoints, idxs_flat, flipped_x)
 
-    # Create flipped keypoints by negating x coordinates
-    keypoints_flipped = keypoints.copy()
-    for i in range(0, len(keypoints_flipped), 4):  # Step by 4 because each point has x,y,z,visibility
-        keypoints_flipped[i] = 1-keypoints_flipped[i]  # Flip x coordinate
-    
-    sequence_flipped.append(keypoints_flipped)
-
-    # change indicies of certain landmarks after flipping (e.g. left elbow vs right elbow)
-    # list of (left, right) index pairs
-    '''
-    0 - nose
-    1 - left eye (inner)
-    2 - left eye
-    3 - left eye (outer)
-    4 - right eye (inner)
-    5 - right eye
-    6 - right eye (outer)
-    7 - left ear
-    8 - right ear
-    9 - mouth (left)
-    10 - mouth (right)
-    11 - left shoulder
-    12 - right shoulder
-    13 - left elbow
-    14 - right elbow
-    15 - left wrist
-    16 - right wrist
-    17 - left pinky
-    18 - right pinky
-    19 - left index
-    20 - right index
-    21 - left thumb
-    22 - right thumb
-    23 - left hip
-    24 - right hip
-    25 - left knee
-    26 - right knee
-    27 - left ankle
-    28 - right ankle
-    29 - left heel
-    30 - right heel
-    31 - left foot index
-    32 - right foot index
-    '''
+    # 2) Swap each left/right block of 4 columns:
     mirror_pairs = [
-        ( 1,  4), ( 2,  5), ( 3,  6),
-        ( 7,  8), ( 9, 10), (11, 12),
+        (1, 4), (2, 5), (3, 6),
+        (7, 8), (9, 10), (11, 12),
         (13, 14), (15, 16), (17, 18),
         (19, 20), (21, 22), (23, 24),
         (25, 26), (27, 28), (29, 30),
         (31, 32)
     ]
-
-    for left_idx, right_idx in mirror_pairs:
-        # compute the start positions in the flat list
-        l0, r0 = left_idx*4, right_idx*4
-        # swap the 4 values for each landmark
+    for l_blk, r_blk in mirror_pairs:
         for offset in range(4):
-            keypoints_flipped[l0+offset], keypoints_flipped[r0+offset] = (
-                keypoints_flipped[r0+offset],
-                keypoints_flipped[l0+offset]
-            )
+            l_col = l_blk * 4 + offset
+            r_col = r_blk * 4 + offset
 
-    array_flipped = np.array(sequence_flipped).reshape(1, 30, 132)
+            # build 2-D indices for this single column
+            cols_l = tf.fill([frames], l_col)
+            cols_r = tf.fill([frames], r_col)
+            rows = tf.range(frames)
+            l_idxs = tf.stack([rows, cols_l], axis=1)  # [frames, 2]
+            r_idxs = tf.stack([rows, cols_r], axis=1)
 
-    return array_flipped
+            # gather & swap
+            l_vals = tf.gather_nd(keypoints, l_idxs)
+            r_vals = tf.gather_nd(keypoints, r_idxs)
+            keypoints = tf.tensor_scatter_nd_update(keypoints, l_idxs, r_vals)
+            keypoints = tf.tensor_scatter_nd_update(keypoints, r_idxs, l_vals)
+
+    return keypoints
+
 
 def rotate_keypoints(keypoints: list) -> np.array:
     # Convert input to numpy array and reshape to (30, 132)

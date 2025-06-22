@@ -1,18 +1,20 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent.parent))
 import yaml
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 from tensorflow.keras.layers import Bidirectional, BatchNormalization
+from src.helpers.data_augmentation import flip_keypoints_horizontally
 
 # ——— CONFIG ———
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 DATA_DIR     = Path(config["data_dir_comb_v3_30f"])
-# bench_press: 0, squat: 1, lat_machine: 2, pull_up: 3, push_up: 4, split_squat: 5
 CLASSES      = config["class_names_6cl"]
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
@@ -38,14 +40,17 @@ files_val, files_test, labels_val, labels_test = train_test_split(
     random_state=42
 )
 
+# 3. tf.data pipeline - parse into (30, 132) tesnors (30 frames, 132 keypoints)
 def augment(seq, label):
     noise = tf.random.normal(tf.shape(seq), 0., 0.02)
     seq = seq + noise
     shift = tf.random.uniform([], -2, 2, dtype=tf.int32)
     seq = tf.roll(seq, shift, axis=0)
+    # flip sequence horizontally with 30% probability
+    do_flip = tf.random.uniform([]) < 0.2
+    seq = tf.cond(do_flip, lambda: flip_keypoints_horizontally(seq), lambda: seq)
     return seq, label
 
-# 3. tf.data pipeline - parse into (30, 132) tesnors (30 frames, 132 keypoints)
 def parse_fn(path, label):
     content = tf.io.read_file(path)
     lines = tf.strings.strip(tf.strings.split(content, "\n"))
@@ -82,6 +87,8 @@ train_ds = make_ds(files_train, labels_train, shuffle=True, augment_fn=augment)
 val_ds   = make_ds(files_val,   labels_val,   shuffle=False)
 test_ds  = make_ds(files_test,  labels_test,  shuffle=False)
 
+# todo: add hyperparameter tuning
+
 # 4. LSTM model
 '''model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(30, 132)),
@@ -107,11 +114,11 @@ model = tf.keras.Sequential([
 
 model.compile(
     loss="sparse_categorical_crossentropy",
-    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3, weight_decay=1e-5),
+    optimizer=tf.keras.optimizers.AdamW(learning_rate=1e-3, weight_decay=1e-5),
     metrics=["accuracy"]
 )
 model.summary()
-model_name = "lstm_bidir_" + str(NUM_CLASSES) + "cl.h5"
+model_name = "lstm_bidir_" + str(NUM_CLASSES) + "cl_v2.h5"
 
 # 5. Train with early stopping and best‐model checkpointing
 callbacks = [
