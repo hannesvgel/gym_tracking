@@ -56,12 +56,12 @@ A web app has been finally created as interface between our models and the user.
 ```css
 gym_tracking/           # root
 ├── data/               # different dataset, functions for pre-processing & validation
+├── models/             # versions of the trained models (lstm & cnn) for exercise classification
 ├── notebooks/          # simple notebooks to quickly test models & validate extracted skeletons
 ├── src/                # code for training models, evaluating exercises & realime inference
 ├── static/             # web application frontend
 ├── app.py              # main flask server
 ├── config.yaml         # config containing models, classes and paths to the datasests
-├── lstm_bidir_*.h5     # versions of the trained lstm models for exercise classification
 ├── README.md       
 ├── requirements.txt    # required dependencies
 ```
@@ -97,13 +97,13 @@ Pre-processing:
 ```css
 gym_tracking/       
 ├── ...
+├── models/             # versions of the trained models (lstm & cnn) for exercise classification
 ├── notebooks/              # simple notebooks to quickly test models & validate extracted skeletons
 ├── src/                    # code for training models, evaluating exercises & realime inference
 │   ├── ...
 │   ├── models              # train functions for DL models
 │   ├── realtime inference  # scripts for realtime exercise classification
 ├── config.yaml             # config containing models, classes and paths to the datasests
-├── lstm_bidir_*.h5         # versions of the trained lstm models for exercise classification
 ├── ...
 ```
 
@@ -114,10 +114,10 @@ gym_tracking/
 ```css
 gym_tracking/
 ├── ...
+├── models/             # versions of the trained models (lstm & cnn) for exercise classification
 ├── static/             # web application frontend
 ├── app.py              # main flask server
 ├── config.yaml         # config containing models, classes and paths to the datasests
-├── lstm_bidir_*.h5     # versions of the trained lstm models for exercise classification
 ├── ...
 ```
 

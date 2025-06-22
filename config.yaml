@@ -15,7 +15,7 @@ class_names_3cl:
   - squat
 
 lstm_bidir_6cl_v1:
-  path: lstm_bidir_6cl_v1.h5
+  path: models/lstm_bidir_6cl_v1.h5
   class_names:
     - bench_press
     - squat
@@ -26,7 +26,7 @@ lstm_bidir_6cl_v1:
   data_dir: data/processed/combined_DS/v3/30_frame_segments
 
 lstm_bidir_6cl_v2:
-  path: lstm_bidir_6cl_v2.h5
+  path: models/lstm_bidir_6cl_v2.h5
   class_names:
     - bench_press
     - squat
@@ -37,7 +37,7 @@ lstm_bidir_6cl_v2:
   data_dir: data/processed/combined_DS/v3/30_frame_segments
 
 lstm_bidir_3cl:
-  path: lstm_bidir_3cl.h5
+  path: models/lstm_bidir_3cl.h5
   class_names:
     - pull_up
     - push_up
@@ -45,7 +45,7 @@ lstm_bidir_3cl:
   data_dir: data/processed/combined_DS/v3/30_frame_segments
 
 cnn_6cl:
-  path: cnn_6cl.h5
+  path: models/cnn_6cl.h5
   class_names:
     - bench_press
     - squat
@@ -56,7 +56,7 @@ cnn_6cl:
   data_dir: data/processed/combined_DS/v3/30_frame_segments
 
 cnn_3cl:
-  path: cnn_3cl.h5
+  path: models/cnn_3cl.h5
   class_names:
     - pull_up
     - push_up

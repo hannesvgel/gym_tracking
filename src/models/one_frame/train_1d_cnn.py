@@ -10,7 +10,7 @@ import numpy as np
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
 DATA_DIR     = Path(config["data_dir_comb_v3_1f"])
-CLASSES      = config["class_names_6cl"]
+CLASSES      = config["class_names_3cl"]
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132
 
@@ -77,7 +77,8 @@ model.compile(
     metrics=["accuracy"]
 )
 model.summary()
-model_name = "cnn_" + str(NUM_CLASSES) + "cl.h5"
+model_name = Path("models") / f"cnn_{NUM_CLASSES}cl.h5"
+Path("models").mkdir(exist_ok=True)
 
 # 5. Train with early stopping and best‐model checkpointing
 callbacks = [

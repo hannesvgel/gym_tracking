@@ -118,7 +118,8 @@ model.compile(
     metrics=["accuracy"]
 )
 model.summary()
-model_name = "lstm_bidir_" + str(NUM_CLASSES) + "cl_v2.h5"
+model_name = Path("models") / f"lstm_bidir_{NUM_CLASSES}cl_v2.h5"
+Path("models").mkdir(exist_ok=True)
 
 # 5. Train with early stopping and best‐model checkpointing
 callbacks = [
