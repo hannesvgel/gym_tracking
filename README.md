@@ -189,11 +189,11 @@ After launching the WebApp and opening the browser at the reference link, a seri
 7) Installation and ngrok Connection Issues
     - Allow Windows Defender Firewall to install the ngrok.exe file in case it gets blocked due to antivirus conflicts;
     - Verify internet connection;
-    - Restart ngrok if the tunnel becomes unstable
-    - ;Ngrok with free account has traffic limitations. Sessions expire after 2 hours, after this time it's necessary to reload the site page.
+    - Restart ngrok if the tunnel becomes unstable;
+    - Ngrok with free account has traffic limitations. Sessions expire after 2 hours, after this time it's necessary to reload the site page.
 9) Classification and movement quality analysis
 The quality of analysis depends on lighting and framing:
-    - For optimal functioning of classification and rule-based algorithm, it is recommended to frame the left profile of the subject during execution of Squat, Split Squat, Push Up, Lat Machine and frame the right profile of the subject during execution of Pull Up and Bench Press;
+    - For optimal functioning of classification and rule-based algorithm, it is recommended to frame the left profile of the subject during execution of Squat, Split Squat, Push Up, Lat Pull-down and frame the right profile of the subject during execution of Pull Up and Bench Press;
     - To increase the quality of Mediapipe detection, it is advisable to position yourself in a well-lit environment, wear tight-fitting clothes, have the most uniform background possible and with a strong contrast compared to the subject.
 
 
@@ -218,7 +218,7 @@ The quality of analysis depends on lighting and framing:
 
 
 ## 5. Authors
-- Coluccino Edoardo ()
+- Coluccino Edoardo (10630619)
 - Freddo Sara (10740747)
 - Girolami Francesca ()
 - Vogel Hannes (11109115)
