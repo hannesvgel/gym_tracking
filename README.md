@@ -220,5 +220,5 @@ The quality of analysis depends on lighting and framing:
 ## 5. Authors
 - Coluccino Edoardo (10630619)
 - Freddo Sara (10740747)
-- Girolami Francesca ()
+- Girolami Francesca (10689084)
 - Vogel Hannes (11109115)
