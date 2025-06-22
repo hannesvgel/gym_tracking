@@ -14,8 +14,19 @@ class_names_3cl:
   - push_up
   - squat
 
-lstm_bidir_6cl:
-  path: lstm_bidir_6cl.h5
+lstm_bidir_6cl_v1:
+  path: lstm_bidir_6cl_v1.h5
+  class_names:
+    - bench_press
+    - squat
+    - lat_machine
+    - pull_up
+    - push_up
+    - split_squat
+  data_dir: data/processed/combined_DS/v3/30_frame_segments
+
+lstm_bidir_6cl_v2:
+  path: lstm_bidir_6cl_v2.h5
   class_names:
     - bench_press
     - squat

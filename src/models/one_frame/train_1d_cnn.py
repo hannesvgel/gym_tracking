@@ -9,7 +9,7 @@ import numpy as np
 # ——— CONFIG ———
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
-DATA_DIR     = Path(config["data_dir_own_1f"])
+DATA_DIR     = Path(config["data_dir_comb_v3_1f"])
 CLASSES      = config["class_names_6cl"]
 NUM_CLASSES  = len(CLASSES)
 KEYPOINT_DIM = 132

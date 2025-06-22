@@ -12,6 +12,7 @@ import os
 import json
 import threading
 import time
+import yaml
 import numpy as np
 from flask_cors import CORS
 
@@ -23,8 +24,10 @@ CORS(app)  # Enable CORS to allow requests from different domains
 MODEL_AVAILABLE = False  # Flag to check if the model is available
 model = None  # Global variable to contain the loaded model
 
-# Exercise classes recognized by the model
-CLASSES = ["bench_press", "squat", "lat_machine", "pull_up", "push_up", "split_squat"]
+with open("config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+MODEL_PATH = config["lstm_bidir_6cl_v1"]["path"]
+CLASSES = config["lstm_bidir_6cl_v1"]["class_names"]
 
 # Model parameters
 SEQUENCE_LENGTH = 30    # Number of frames needed for a prediction
@@ -38,8 +41,8 @@ try:
     print("TensorFlow imported successfully")
     
     # Check model file existence
-    if os.path.exists('lstm_bidir_6cl.h5'):
-        model = load_model('lstm_bidir_6cl.h5')
+    if os.path.exists(MODEL_PATH):
+        model = load_model(MODEL_PATH)
         print("Model loaded successfully")
         print(f"Model input shape: {model.input_shape}")
     else:
