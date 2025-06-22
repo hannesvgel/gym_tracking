@@ -110,7 +110,7 @@ gym_tracking/
 **TODO Hannes:** Section about the exercise classification & realtime inference
 
 
-### 4.4 Exercise Evaluation & Web App
+### 4.3 Exercise Evaluation & Web App
 ```css
 gym_tracking/
 ├── ...
