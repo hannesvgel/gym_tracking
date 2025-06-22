@@ -170,7 +170,7 @@ After launching the WebApp and opening the browser at the reference link, a seri
     - End Session: ends the analysis.
 
 
-#### 4.3.3 Common porblem resolution
+#### 4.3.3 Common problem resolution
 1) "Model not available"
     - ErrorVerify that lstm_bidir_6cl.h5 is present in the main directory;
     - Check that TensorFlow is installed correctly.
