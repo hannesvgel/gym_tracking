@@ -171,30 +171,30 @@ After launching the WebApp and opening the browser at the reference link, a seri
 
 
 #### 4.3.3 Common porblem resolution
-"Model not available" Error
-•	Verify that lstm_bidir_6cl.h5 is present in the main directory;
-•	Check that TensorFlow is installed correctly.
-Webcam not detected
-•	Grant camera permissions to the browser if requested;
-•	Try a different browser (Chrome recommended for optimal Mediapipe functioning);
-•	Verify that no other application is using the webcam;
-•	Try selecting another camera from the list of available ones.
-Slow Performance
-•	Close other applications that intensively use CPU/GPU because MediaPipe + TensorFlow can consume a lot of CPU;
-•	Use Chrome for optimal performance with MediaPipe;
-•	Modify the modelComplexity parameter in the Mediapipe configuration:
-o	modelComplexity: 0: computationally lighter but less accurate;
-o	modelComplexity: 1: balanced;
-o	modelComplexity: 2: very accurate but computationally heavy.
-Installation and ngrok Connection Issues
-•	Allow Windows Defender Firewall to install the ngrok.exe file in case it gets blocked due to antivirus conflicts;
-•	Verify internet connection;
-•	Restart ngrok if the tunnel becomes unstable;
-•	Ngrok with free account has traffic limitations. Sessions expire after 2 hours, after this time it's necessary to reload the site page.
-Classification and movement quality analysis
+1) "Model not available"
+    - ErrorVerify that lstm_bidir_6cl.h5 is present in the main directory;
+    - Check that TensorFlow is installed correctly.
+3) Webcam not detected
+    - Grant camera permissions to the browser if requested;
+    - Try a different browser (Chrome recommended for optimal Mediapipe functioning);
+    - Verify that no other application is using the webcam;
+    - Try selecting another camera from the list of available ones.
+5) Slow Performance
+    - Close other applications that intensively use CPU/GPU because MediaPipe + TensorFlow can consume a lot of CPU;
+    - Use Chrome for optimal performance with MediaPipe;
+    - Modify the modelComplexity parameter in the Mediapipe configuration:
+        - modelComplexity: 0: computationally lighter but less accurate;
+        - modelComplexity: 1: balanced;
+        - modelComplexity: 2: very accurate but computationally heavy.
+7) Installation and ngrok Connection Issues
+    - Allow Windows Defender Firewall to install the ngrok.exe file in case it gets blocked due to antivirus conflicts;
+    - Verify internet connection;
+    - Restart ngrok if the tunnel becomes unstable
+    - ;Ngrok with free account has traffic limitations. Sessions expire after 2 hours, after this time it's necessary to reload the site page.
+9) Classification and movement quality analysis
 The quality of analysis depends on lighting and framing:
-•	For optimal functioning of classification and rule-based algorithm, it is recommended to frame the left profile of the subject during execution of Squat, Split Squat, Push Up, Lat Machine and frame the right profile of the subject during execution of Pull Up and Bench Press;
-•	To increase the quality of Mediapipe detection, it is advisable to position yourself in a well-lit environment, wear tight-fitting clothes, have the most uniform background possible and with a strong contrast compared to the subject.
+    - For optimal functioning of classification and rule-based algorithm, it is recommended to frame the left profile of the subject during execution of Squat, Split Squat, Push Up, Lat Machine and frame the right profile of the subject during execution of Pull Up and Bench Press;
+    - To increase the quality of Mediapipe detection, it is advisable to position yourself in a well-lit environment, wear tight-fitting clothes, have the most uniform background possible and with a strong contrast compared to the subject.
 
 
 ## 5. Limitations
