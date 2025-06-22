@@ -3,9 +3,10 @@ from pathlib import Path
 import os
 
 # ---- base folder ----
-DATA_DIR = Path("data/processed/own_DS/30_frame_segments/vertical") # directory where you have the 6 starting folders
-EXTRACTION_DIR = Path("data/processed/own_DS/1_frame_segments/vertical") # directory where the code creates
-                                                                         # automatically 6 new folders with the extracted data
+# directory where you have the 6 starting folders
+DATA_DIR = Path("data/processed/combined_DS/v3/30_frame_segments")
+# directory where the code automatically created 6 new folders with the extracted data
+EXTRACTION_DIR = Path("data/processed/combined_DS/v3/1_frame_segments")
 
 # ---- folders iteration ----
 for exercise in os.listdir(DATA_DIR):
