@@ -119,6 +119,7 @@ The Fit3D dataset is a large-scale collection designed for 3D human pose, shape,
 The pre-processing steps involved were similar for all datasets and included:
 1) Manually trimming the videos to include only repetitions of a single exercise, removing any introductory or concluding sequences from each video.
 2) Processing the videos into CSV files, where each file contains segments of 30 consecutive frames of MediaPipe skeleton landmarks. This is handled by ``data\pre-processing\video_seg_processing.py``.
+3) Combining and balancing the datasets (see *4.1.5* below)
 
 #### 4.1.5 Combining the Datasets
 Each of the three datasets covered different exercises, with some overlap between them. To create a balanced final dataset, we selected samples from all three sources. We excluded the Bulgarian squat from our dataset and replaced it with the standard squat from the other datasets, as the Bulgarian squat proved problematic during training and classification—primarily due to its sensitivity to camera angle, which was a result of being consistently recorded from the same viewpoint during data acquisition. As a result, our final dataset focuses on the following exercises:
@@ -129,29 +130,42 @@ Each of the three datasets covered different exercises, with some overlap betwee
 - split squat
 - squat
 
-The illustration below shows how the final dataset is constructed from the different sources:
+The diagram below illustrates how the final dataset is assembled from the different sources. The merging process is managed by the script `data/pre-processing/combine_dataset.py`.
 
 <img src="assets/datasets.drawio.svg" alt="Datasets combined" width="100%">
 
 
+To ensure that no exercise was overrepresented and to minimize bias in the dataset, we performed horizontal flipping of the landmarks for selected examples from our own dataset. This augmentation was applied only where necessary, primarily because our dataset was slightly biased toward a particular camera angle. Flipping the data effectively simulated a different viewpoint. In the end, each exercise class in the combined dataset contained 800 examples. The flipping and class balancing are performed using the script `data/pre-processing/balance_dataset.py`. 
 
+The final combined dataset is located under ``data/processed/combined_DS/v3/30_frame_segments``.
 
 
 ### 4.2 Exercise Classification
+
+The illustration below highlights the key subdirectories and scripts used for classification, along with a brief description of their purpose:
 ```css
 gym_tracking/       
 ├── ...
-├── models/                 # versions of the trained models (lstm & cnn) for exercise classification
-├── notebooks/              # simple notebooks to quickly test models & validate extracted skeletons
-├── src/                    # code for training models, evaluating exercises & realime inference
+├── models/                     # versions of the trained models (lstm & cnn) for exercise classification
+├── notebooks/                  # simple notebooks to quickly test models & validate extracted skeletons
+├── src/                        # code for training models, evaluating exercises & realime inference
 │   ├── ...
-│   ├── models              # train functions for DL models
-│   ├── realtime inference  # scripts for realtime exercise classification
-├── config.yaml             # config containing models, classes and paths to the datasests
+│   ├── models                  # train functions for DL models
+│   │   ├── multiple_frames
+│   │   │   ├── train_lstm.py   # main training script for the lstm model 
+│   ├── realtime inference      # scripts for realtime exercise classification
+├── config.yaml                 # config containing models, classes and paths to the datasests
 ├── ...
 ```
 
-**TODO Hannes:** Section about the exercise classification & realtime inference
+Training of the LSTM model is performed using `src/models/multiple_frames/train_lstm.py`. The pipeline is illustrated below:
+
+<img src="assets/lstm_pipeline.drawio.svg" alt="LSTM Training Pipeline" width="100%">
+
+The model achieved **99% accuracy** on the test set. The training curves for loss and accuracy are shown below:
+<img src="assets/lstm_6cl_acc_loss.png" alt="Training Loss & Accurany" width="70%">
+
+The final trained models (`*.h5` files) are stored in the `models` directory. Model paths, class labels, and dataset locations are specified in `config.yaml`—this configuration is used by the web app, the `notebooks` (for quick testing and validation), and the scripts in `src/realtime_inference` (for running local classification without the web app or exercise evaluation).
 
 
 ### 4.3 Exercise Evaluation & Web App
@@ -168,68 +182,73 @@ gym_tracking/
 
 #### 4.3.1 ngrok installation
 Download ngrok from https://ngrok.com/ and register in order to obtain an authtoken, which has to be configured:
-```css
+```bash
 ngrok config add-authtoken YOUR_AUTHTOKEN
 ```
-Run then app.py. Open a terminal in the section where you extracted ngrok and enter the commands:
-```css
+Run then ``app.py``. Open a terminal in the section where you extracted ngrok and enter the commands:
+```bash
 .\ngrok.exe authtoken YOUR_TOKEN # To activate the public tunnel
 .\ngrok.exe http http://localhost:8000 # To generate the public link
 ```
 ngrok will provide a random public URL (e.g. https://e0b2-5-90-143-228.ngrok-free.app) accessible from any device.
 
 
-#### 4.3.2 Webb App functioning
-After launching the WebApp and opening the browser at the reference link, a series of elements will appear:
-1) Camera selection: The user chooses a camera from the dropdown menu (if multiple cameras are available);
-2) Video display: The video feed from the selected camera appears in the main section;
-3) Start Session: resets counters, variables and starts the real-time analysis session;
-4) Pose detection: The system starts tracking the user's posture, showing a green and red colored "skeleton" displayed in a box below the video
-5) Exercise recognition: After collecting 30 consecutive frames of the user's posture, the system automatically identifies the exercise with the highest confidence, displaying its name in the "Current Exercise" section
-6) Real-Time Feedback:
-    - Form analysis: The system continuously evaluates by analyzing each single frame the execution correctness and shows in the "Form Analysis" section:
-        - Green: "Correct Execution!" when the exercise is executed correctly;
-        - Orange: Specific warnings to correct posture;
-        - Gray: Neutral state;
-    - Audio feedback: Vocal warnings, reporting the Orange state message, are played when necessary, to allow the user to correct themselves during training;
-    - Confirmation sounds: A high-pitched sound confirms each correct repetition;
-7) Progress Monitoring ReportExercise History:
-    - The system counts correct repetitions for each exercise and saves them in a list that updates automatically;
-    - Warning History: All warnings are recorded with timestamps in the "Warning History" section;
-    - Session Status: Display of the number of processed frames and session status;
-9) Recording Functions
-    - Start Recording: The user can start recording poses during training;
-    - Stop recording: stops recording;
-    - Play Recording: Possibility to review recorded movements. In the same box where real-time pose detection is produced, now a blue and purple skeleton is produced that reproduces all recorded movements to have visual feedback of the quality of executions performed (before pressing "Play Recording" you need to press "stop recording" and "end session");
-    - Stop playback: Stop playback of saved poses;
-    - End Session: ends the analysis.
+#### 4.3.2 Web App User Guide
+After launching the web app and opening the browser at the provided link, you will see the following elements:
+
+1. **Camera selection:** Choose a camera from the dropdown menu (if multiple cameras are available).
+2. **Video display:** The video feed from the selected camera appears in the main section.
+3. **Start Session:** Resets counters and variables, and starts the real-time analysis session.
+4. **Pose detection:** The system tracks the user's posture, displaying a green and red "skeleton" in a box below the video.
+5. **Exercise recognition:** After collecting 30 consecutive frames, the system automatically identifies the exercise with the highest confidence and displays its name in the "Current Exercise" section.
+6. **Real-Time Feedback:**
+    - **Form analysis:** The system continuously evaluates each frame for execution correctness, showing feedback in the "Form Analysis" section:
+        - Green: "Correct Execution!" when the exercise is performed correctly.
+        - Orange: Specific warnings to correct posture.
+        - Gray: Neutral state.
+    - **Audio feedback:** Vocal warnings are played for posture corrections, and a high-pitched sound confirms each correct repetition.
+7. **Progress Monitoring & Exercise History:**
+    - The system counts correct repetitions for each exercise and updates a list automatically.
+    - Warning History: All warnings are recorded with timestamps in the "Warning History" section.
+    - Session Status: Displays the number of processed frames and the session status.
+8. **Recording Functions:**
+    - **Start Recording:** Begin recording poses during training.
+    - **Stop Recording:** Stop recording.
+    - **Play Recording:** Review recorded movements. The pose detection box will display a blue and purple skeleton to replay all recorded movements for visual feedback (note: press "Stop Recording" and "End Session" before playback).
+    - **Stop Playback:** Stop playback of saved poses.
+    - **End Session:** Ends the analysis.
 
 
-#### 4.3.3 Common problem resolution
-1) "Model not available"
-    - ErrorVerify that lstm_bidir_6cl.h5 is present in the main directory;
+#### 4.3.3 Troubleshooting
+
+1. **"Model not available"**
+    - Ensure that `lstm_bidir_6cl.h5` is present in the main directory.
     - Check that TensorFlow is installed correctly.
-3) Webcam not detected
-    - Grant camera permissions to the browser if requested;
-    - Try a different browser (Chrome recommended for optimal Mediapipe functioning);
-    - Verify that no other application is using the webcam;
+
+2. **Webcam not detected**
+    - Grant camera permissions to the browser if requested.
+    - Try a different browser (Chrome is recommended for optimal Mediapipe performance).
+    - Verify that no other application is using the webcam.
     - Try selecting another camera from the list of available ones.
-5) Slow Performance
-    - Close other applications that intensively use CPU/GPU because MediaPipe + TensorFlow can consume a lot of CPU;
-    - Use Chrome for optimal performance with MediaPipe;
-    - Modify the modelComplexity parameter in the Mediapipe configuration:
-        - modelComplexity: 0: computationally lighter but less accurate;
-        - modelComplexity: 1: balanced;
-        - modelComplexity: 2: very accurate but computationally heavy.
-7) Installation and ngrok Connection Issues
-    - Allow Windows Defender Firewall to install the ngrok.exe file in case it gets blocked due to antivirus conflicts;
-    - Verify internet connection;
-    - Restart ngrok if the tunnel becomes unstable;
-    - Ngrok with free account has traffic limitations. Sessions expire after 2 hours, after this time it's necessary to reload the site page.
-9) Classification and movement quality analysis
-The quality of analysis depends on lighting and framing:
-    - For optimal functioning of classification and rule-based algorithm, it is recommended to frame the left profile of the subject during execution of Squat, Split Squat, Push Up, Lat Pull-down and frame the right profile of the subject during execution of Pull Up and Bench Press;
-    - To increase the quality of Mediapipe detection, it is advisable to position yourself in a well-lit environment, wear tight-fitting clothes, have the most uniform background possible and with a strong contrast compared to the subject.
+
+3. **Slow performance**
+    - Close other applications that intensively use CPU/GPU, as MediaPipe and TensorFlow can consume significant resources.
+    - Use Chrome for optimal performance with MediaPipe.
+    - Adjust the `modelComplexity` parameter in the Mediapipe configuration:
+        - `modelComplexity: 0` — computationally lighter but less accurate.
+        - `modelComplexity: 1` — balanced.
+        - `modelComplexity: 2` — very accurate but computationally heavy.
+
+4. **Installation and ngrok connection issues**
+    - Allow Windows Defender Firewall to install the `ngrok.exe` file if it gets blocked due to antivirus conflicts.
+    - Verify your internet connection.
+    - Restart ngrok if the tunnel becomes unstable.
+    - Note: Ngrok with a free account has traffic limitations. Sessions expire after 2 hours; after this time, reload the site page.
+
+5. **Classification and movement quality analysis**
+    - The quality of analysis depends on lighting and framing:
+        - For optimal classification and rule-based analysis, frame the left profile of the subject during Squat, Split Squat, Push Up, and Lat Pull-down, and the right profile during Pull Up and Bench Press.
+        - To improve Mediapipe detection, position yourself in a well-lit environment, wear tight-fitting clothes, and ensure a uniform background with strong contrast to the subject.
 
 
 ## 5. Limitations
