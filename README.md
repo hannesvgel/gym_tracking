@@ -72,7 +72,7 @@ gym_tracking/           # root
 ├── requirements.txt    # required dependencies
 ```
 
-The following sub-sections describe the main building blocks of the code and pipeline, from data acquisition to the final web app.
+The following subsections describe the main building blocks of the code and pipeline, from data acquisition to the final web app.
 
 
 ### 4.1 Datasets & Pre-Processing
@@ -86,27 +86,55 @@ gym_tracking/
 ```
 
 All datasets and data processing are managed within the `data` folder, which contains the following subdirectories:
-- ``aquisition`` holds a simple script used to download the [workout videos](https://www.kaggle.com/datasets/hasyimabdillah/workoutfitness-video) and [workout images](https://www.kaggle.com/datasets/hasyimabdillah/workoutexercises-images) datasets from Kaggle.
+- ``aquisition`` holds a simple script used to download the [workout videos](https://www.kaggle.com/datasets/philosopher0808/gym-workoutexercises-video) and [workout images](https://www.kaggle.com/datasets/hasyimabdillah/workoutexercises-images) datasets from Kaggle.
 - `pre-processing` contains various helper functions used for: splitting videos into CSVs of 30 frames with MediaPipe skeleton landmarks for LSTM training, converting 30-frame CSVs into single-frame CSVs for CNN training, combining and balancing different datasets, and more.
 - `processed` contains the finalized datasets, including both 30-frame and single-frame CSVs, as well as a combined dataset used for training the final LSTM model.
 
-**TODO Hannes:** Section about the different Datasets, how we processed the Data & how we got to our final DS.
+Our raw data consisted of exercise videos. We used [MediaPipe](https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker?hl=de) for pose estimation, extracting skeletons from each frame. Each skeleton is represented by 33 landmarks, each with x, y, z coordinates and a visibility value. For training our LSTM model, we used sequences of 30 consecutive frames of these landmarks to capture temporal information.
 
+The following subsections explain how each individual dataset — our [own](https://drive.google.com/drive/folders/1H9mTOb1FsfSzcLXhqJkY6SCRLRxz_LK-), the [Kaggle dataset](https://www.kaggle.com/datasets/philosopher0808/gym-workoutexercises-video), and the [Fit3D dataset](https://fit3d.imar.ro/) — were acquired, processed, and ultimately combined into the final dataset.
 
-#### 4.1.1 Our Dataset (from video acquisitions)
-Data acquisition:
+#### 4.1.1 Our Dataset
+**Data Acquisition:**
 1) We used three phone webcams in a fixed reference system
 2) We considered different subjects
-3) Every subject executed different possible exercises (split squat, squat, push-up, pull-up, lat pull-down, bench press)
+3) Every subject executed different possible exercises (split squat, bulgarian squat, push-up, pull-up, lat pull-down, bench press)
 4) Every subject executed multiple series (correct and wrong execution) of the same exercise
 
-At the end of the acquisition part, we obtained videos for each subject and for each exercise executed. Inside each video, a lot of repetitions of the same movement were present.
+**Description:** At the end of the acquisition phase, we had collected videos for each subject and each exercise performed. Each video contained multiple repetitions of the same movement. The final Exercises were split squat, bulgarian squat, push-up, pull-up, lat pull-down & bench press.
 
-Pre-processing:
-1) manual cutting of the videos in single repetitions 
-2) splitting of the videos of the single ripetitions in segments of 30 consequetive frames, in order to reduce the computational load.
 
-These 30 consecutive frames for all the repetitions done will be the input for the classification and evaluation model.
+#### 4.1.2 Kaggle Workout Videos Dataset
+**Data Acquisition:** simply download the Dataset from Kaggle by running ``data\aquisition\download_kaggle_ds.py``.
+
+**Description:** This dataset consists of workout videos organized by exercise type, with each folder named after the corresponding workout. The videos are in `.mp4` format, sourced primarily from YouTube and supplemented with original recordings. Video resolution and duration vary, but each video contains at least one repetition of the exercise.
+
+#### 4.1.3 Fit3D Dataset
+**Data Acquisition:** Download the dataset from [https://fit3d.imar.ro/download](https://fit3d.imar.ro/download). Access must be requested, but if one uses a university email for academic purposes, approval is typically granted almost immediately.
+
+**Description:**  
+The Fit3D dataset is a large-scale collection designed for 3D human pose, shape, and motion analysis in fitness training. It contains over 3 million images and corresponding 3D ground-truth data, covering 47 exercises performed by both instructors and trainees. The dataset features recordings from multiple subjects using a marker-based motion capture system, captured from four camera angles at 900x900 resolution and 50 fps. Each recording includes segmented exercise repetitions, 3D skeletons with 25 joints, and aligned mesh models (GHUM and SMPLX). For our application we utilized the raw video recordings.
+
+#### 4.1.4 Pre-Processing
+The pre-processing steps involved were similar for all datasets and included:
+1) Manually trimming the videos to include only repetitions of a single exercise, removing any introductory or concluding sequences from each video.
+2) Processing the videos into CSV files, where each file contains segments of 30 consecutive frames of MediaPipe skeleton landmarks. This is handled by ``data\pre-processing\video_seg_processing.py``.
+
+#### 4.1.5 Combining the Datasets
+Each of the three datasets covered different exercises, with some overlap between them. To create a balanced final dataset, we selected samples from all three sources. We excluded the Bulgarian squat from our dataset and replaced it with the standard squat from the other datasets, as the Bulgarian squat proved problematic during training and classification—primarily due to its sensitivity to camera angle, which was a result of being consistently recorded from the same viewpoint during data acquisition. As a result, our final dataset focuses on the following exercises:
+- bench press
+- lat machine
+- pull up
+- push up
+- split squat
+- squat
+
+The illustration below shows how the final dataset is constructed from the different sources:
+
+<img src="assets/datasets.drawio.svg" alt="Datasets combined" width="100%">
+
+
+
 
 
 ### 4.2 Exercise Classification
