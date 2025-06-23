@@ -6,7 +6,6 @@
 <img src="assets/web_app_2.png" alt="Gym Tracker Classification & Evaluation" width="70%">
 
 
-
 ## 1. Prerequisites
 - Python 3.8+ (tested with Python 3.11.4)
 - Dependencies listed in ```requirements.txt```
@@ -21,7 +20,6 @@
 ```bash
 git clone https://github.com/hannesvgel/gym_tracking.git
 ```
-
 
 ### Install Dependencies
 Create a virtual environment
@@ -45,6 +43,7 @@ Install the needed Dependencies
 pip install -r requirements.txt
 ```
 
+
 ## 3. Usage
 To start the web app, navigate to the project root and run:
 ```bash
@@ -59,6 +58,7 @@ If it doesn't open automatically, click on the link http://localhost:8000 shown 
 Then, the evaluation of the performance correctness is done using some parameters like, for example, the joint angle of a certain articulation.
 A web app has been finally created as interface between our models and the user.
 
+Below is a visualization of the project structure, along with explanations of its key components:
 ```css
 gym_tracking/           # root
 ├── data/               # different dataset, functions for pre-processing & validation
@@ -72,7 +72,7 @@ gym_tracking/           # root
 ├── requirements.txt    # required dependencies
 ```
 
-The following sections describe the main building blocks of the code and pipeline, from data acquisition to the final web app.
+The following sub-sections describe the main building blocks of the code and pipeline, from data acquisition to the final web app.
 
 
 ### 4.1 Datasets & Pre-Processing
@@ -84,6 +84,11 @@ gym_tracking/
 |   ├── processed       # final datasets with mediapipe extraxted keypoints stored as CSVs
 ├── ...
 ```
+
+All datasets and data processing are managed within the `data` folder, which contains the following subdirectories:
+- ``aquisition`` holds a simple script used to download the [workout videos](https://www.kaggle.com/datasets/hasyimabdillah/workoutfitness-video) and [workout images](https://www.kaggle.com/datasets/hasyimabdillah/workoutexercises-images) datasets from Kaggle.
+- `pre-processing` contains various helper functions used for: splitting videos into CSVs of 30 frames with MediaPipe skeleton landmarks for LSTM training, converting 30-frame CSVs into single-frame CSVs for CNN training, combining and balancing different datasets, and more.
+- `processed` contains the finalized datasets, including both 30-frame and single-frame CSVs, as well as a combined dataset used for training the final LSTM model.
 
 **TODO Hannes:** Section about the different Datasets, how we processed the Data & how we got to our final DS.
 
@@ -108,7 +113,7 @@ These 30 consecutive frames for all the repetitions done will be the input for t
 ```css
 gym_tracking/       
 ├── ...
-├── models/             # versions of the trained models (lstm & cnn) for exercise classification
+├── models/                 # versions of the trained models (lstm & cnn) for exercise classification
 ├── notebooks/              # simple notebooks to quickly test models & validate extracted skeletons
 ├── src/                    # code for training models, evaluating exercises & realime inference
 │   ├── ...
