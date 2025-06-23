@@ -2,8 +2,8 @@
 
 **AI Gym Tracker** is a real-time exercise analysis system designed to enhance workout feedback and performance monitoring. It leverages **MediaPipe** for accurate pose detection, a **Bidirectional LSTM** model for exercise classification, and **rule-based logic** using thresholds and local minima to assess the quality of each repetition. To ensure accessibility and ease of use, the entire system is integrated into a **user-friendly web application**.
 
-![image](https://github.com/user-attachments/assets/7877e548-656e-4740-b715-4f7dfe7b4e2f)
-![image](https://github.com/user-attachments/assets/d5fa2e47-2a7a-4baa-b9cd-f7c173d8aefc)
+<img src="assets/web_app_1.png" alt="Gym Tracker Skeleton" width="70%">
+<img src="assets/web_app_2.png" alt="Gym Tracker Classification & Evaluation" width="70%">
 
 
 
