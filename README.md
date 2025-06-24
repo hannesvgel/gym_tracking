@@ -266,17 +266,17 @@ After launching the web app and opening the browser at the provided link, you wi
 ## 5. Limitations
 The following subsections provide an overview of the limitations present in the current approach and processing pipeline.
 
-### 5.1 Video acquisition quality
-
-### 5.2 Joints extraction accuracy
+### 5.1 Data and Pose Quality
+Some videos in the dataset suffer from low recording quality or incomplete framing, where only a portion of the person is captured on screen. As a result, MediaPipe sometimes struggles to accurately detect and recognize the skeleton, leading to poorly captured exercise poses. This can create a negative chain reaction: low-quality video → inaccurate pose detection → poor training data → reduced model performance. The same issue can occur during live classification if the camera quality is poor and MediaPipe fails to detect the skeleton. Since the entire pipeline relies on accurate pose detection, both training and inference are highly dependent on good video and camera quality.
 
 ### 5.3 Limited dataset
+Another limitation we faced was the size and diversity of our dataset. While we were able to supplement our data with existing sources such as [Kaggle](#412-kaggle-workout-videos-dataset) and [Fit3D](#413-fit3d-dataset), having more data—especially from diverse sources—would be highly beneficial. At times, we had to change or exclude certain exercises due to camera angle bias in our own recordings. A larger, more diverse, and better-balanced dataset with less bias would help prevent overfitting and improve the model’s generalization.
 
 ### 5.4 Exercise Selectiom
-- We had to change some exercises along the way and then used online dataset/make data augmentations
-- Model Limited to predefined classes
+During development, we had to modify our set of exercises and incorporate online datasets or perform data augmentation due to camera angle bias in our own recordings. Our original dataset was also unbalanced — for example, split squat had four times as many examples as push up — which led to a model biased toward overrepresented classes. Additionally, the model is currently limited to a predefined set of exercise classes. Expanding the dataset to include more exercises and ensuring better class balance would make the application more robust and broadly applicable.
 
 ### 5.5 Model misclassifications 
+Even though our model achieved 99% accuracy on the test set, occasional misclassifications still occur — mainly because some exercises share similar frames (e.g., pull up and squat in a standing position). To reduce overfitting, we applied data augmentation (see the model pipeline diagram in [Section 4.2](#42-exercise-classification)) and increased the amount of training data by combining multiple datasets (see [4.1.5 Combining the Datasets](#415-combining-the-datasets)). Further improvements are possible, as discussed in [Section 6.2](#62-dl-model-improvements).
 
 ## 6. Future Developments
 The following subsections outline possible future steps to address the limitations of the current approach, as described in [Section 5](#5-limitations).
