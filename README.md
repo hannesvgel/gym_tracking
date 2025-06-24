@@ -272,7 +272,7 @@ Some videos in the dataset suffer from low recording quality or incomplete frami
 ### 5.3 Limited dataset
 Another limitation we faced was the size and diversity of our dataset. While we were able to supplement our data with existing sources such as [Kaggle](#412-kaggle-workout-videos-dataset) and [Fit3D](#413-fit3d-dataset), having more data—especially from diverse sources—would be highly beneficial. At times, we had to change or exclude certain exercises due to camera angle bias in our own recordings. A larger, more diverse, and better-balanced dataset with less bias would help prevent overfitting and improve the model’s generalization.
 
-### 5.4 Exercise Selectiom
+### 5.4 Exercise Selection
 During development, we had to modify our set of exercises and incorporate online datasets or perform data augmentation due to camera angle bias in our own recordings. Our original dataset was also unbalanced — for example, split squat had four times as many examples as push up — which led to a model biased toward overrepresented classes. Additionally, the model is currently limited to a predefined set of exercise classes. Expanding the dataset to include more exercises and ensuring better class balance would make the application more robust and broadly applicable.
 
 ### 5.5 Model misclassifications 
