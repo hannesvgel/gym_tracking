@@ -620,7 +620,7 @@
     <div class="container">
         <!-- Application header with title and description -->
         <div class="header">
-            <h1>Exercise Analyzer</h1>
+            <h1>AI Gym Tracker</h1>
             <p>Real-time exercise recognition and form analysis</p>
         </div>
 
@@ -1380,10 +1380,10 @@
                         // Define squat form validation conditions
                         const cond1 = toeL[0] <= kneeL[0];  
                         const cond2 = toeR[0] <= kneeR[0];  
-                        const cond3 = minimumL.value <= 95; 
-                        const cond4 = minimumR.value <= 95; 
-                        const cond5 = angleL <= 95;         
-                        const cond6 = angleR <= 95;         
+                        const cond3 = minimumL.value <= 97; 
+                        const cond4 = minimumR.value <= 97; 
+                        const cond5 = angleL <= 100;         
+                        const cond6 = angleR <= 100;         
 
                         // Analyze squat form and provide feedback
                         if (cond1 && cond2 && (cond5 || cond6) && (toeL[0] <= hipL[0] && toeR[0] <= hipR[0])) {
@@ -1392,8 +1392,8 @@
                         } else if ((!cond1 || !cond2)) {
                             feedback = "Knees further forward than the tip of the feet";
                             color = "warning";
-                        } else if ((!cond3 || !cond4) && (minimumL.value <= 150 || minimumR.value <= 150) && (toeL[0] <= hipL[0] || toeR[0] <= hipR[0])) {
-                            feedback = "Bend the left leg more, until reaching parallel";
+                        } else if ((!cond3 || !cond4) && (minimumL.value <= 145 || minimumR.value <= 145) && (toeL[0] <= hipL[0] || toeR[0] <= hipR[0])) {
+                            feedback = "Bend the leg more, until reaching parallel";
                             color = "warning";
                         } else if (cond5 && (toeL[0] >= hipL[0] && toeR[0] >= hipR[0])) {
                             feedback = "";
@@ -1999,3 +1999,31 @@
         </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
