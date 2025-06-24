@@ -5,6 +5,19 @@
 <img src="assets/web_app_1.png" alt="Gym Tracker Skeleton" width="70%">
 <img src="assets/web_app_2.png" alt="Gym Tracker Classification & Evaluation" width="70%">
 
+## Table of Contents
+
+1. [Prerequisites](#1-prerequisites)
+2. [Installation](#2-installation)
+3. [Usage](#3-usage)
+4. [Project Structure & Purpose](#4-project-structure--purpose)
+    1. [Datasets & Pre-Processing](#41-datasets--pre-processing)
+    2. [Exercise Classification](#42-exercise-classification)
+    3. [Exercise Evaluation & Web App](#43-exercise-evaluation--web-app)
+5. [Limitations](#5-limitations)
+6. [Future Developments](#6-future-developments)
+7. [Authors](#7-authors)
+
 
 ## 1. Prerequisites
 - Python 3.8+ (tested with Python 3.11.4)
@@ -119,7 +132,7 @@ The Fit3D dataset is a large-scale collection designed for 3D human pose, shape,
 The pre-processing steps involved were similar for all datasets and included:
 1) Manually trimming the videos to include only repetitions of a single exercise, removing any introductory or concluding sequences from each video.
 2) Processing the videos into CSV files, where each file contains segments of 30 consecutive frames of MediaPipe skeleton landmarks. This is handled by ``data\pre-processing\video_seg_processing.py``.
-3) Combining and balancing the datasets (see *4.1.5* below)
+3) Combining and balancing the datasets (see [4.1.5](#415-combining-the-datasets) below)
 
 #### 4.1.5 Combining the Datasets
 Each of the three datasets covered different exercises, with some overlap between them. To create a balanced final dataset, we selected samples from all three sources. We excluded the Bulgarian squat from our dataset and replaced it with the standard squat from the other datasets, as the Bulgarian squat proved problematic during training and classification—primarily due to its sensitivity to camera angle, which was a result of being consistently recorded from the same viewpoint during data acquisition. As a result, our final dataset focuses on the following exercises:
@@ -187,8 +200,8 @@ ngrok config add-authtoken YOUR_AUTHTOKEN
 ```
 Run then ``app.py``. Open a terminal in the section where you extracted ngrok and enter the commands:
 ```bash
-.\ngrok.exe authtoken YOUR_TOKEN # To activate the public tunnel
-.\ngrok.exe http http://localhost:8000 # To generate the public link
+.\ngrok.exe authtoken YOUR_TOKEN        # To activate the public tunnel
+.\ngrok.exe http http://localhost:8000  # To generate the public link
 ```
 ngrok will provide a random public URL (e.g. https://e0b2-5-90-143-228.ngrok-free.app) accessible from any device.
 
@@ -221,8 +234,8 @@ After launching the web app and opening the browser at the provided link, you wi
 
 #### 4.3.3 Troubleshooting
 
-1. **"Model not available"**
-    - Ensure that `lstm_bidir_6cl.h5` is present in the main directory.
+1. **Model not available**
+    - Ensure that the model selected (with ``config.yaml``) is present in the ``model`` directory.
     - Check that TensorFlow is installed correctly.
 
 2. **Webcam not detected**
@@ -245,33 +258,43 @@ After launching the web app and opening the browser at the provided link, you wi
     - Restart ngrok if the tunnel becomes unstable.
     - Note: Ngrok with a free account has traffic limitations. Sessions expire after 2 hours; after this time, reload the site page.
 
-5. **Classification and movement quality analysis**
-    - The quality of analysis depends on lighting and framing:
-        - For optimal classification and rule-based analysis, frame the left profile of the subject during Squat, Split Squat, Push Up, and Lat Pull-down, and the right profile during Pull Up and Bench Press.
-        - To improve Mediapipe detection, position yourself in a well-lit environment, wear tight-fitting clothes, and ensure a uniform background with strong contrast to the subject.
+5. **Classification and movement quality analysis** <br> The quality of analysis depends on lighting and framing:
+    - For optimal classification and rule-based analysis, frame the left profile of the subject during Squat, Split Squat, Push Up, and Lat Pull-down, and the right profile during Pull Up and Bench Press.
+    - To improve Mediapipe detection, position yourself in a well-lit environment, wear tight-fitting clothes, and ensure a uniform background with strong contrast to the subject.
 
 
 ## 5. Limitations
-**TODO**
-- Video acquisition quality
-- Joints extraction accuracy
-- Limited dataset
+The following subsections provide an overview of the limitations present in the current approach and processing pipeline.
+
+### 5.1 Video acquisition quality
+
+### 5.2 Joints extraction accuracy
+
+### 5.3 Limited dataset
+
+### 5.4 Exercise Selectiom
 - We had to change some exercises along the way and then used online dataset/make data augmentations
-- Model misclassifications 
 - Model Limited to predefined classes
 
+### 5.5 Model misclassifications 
 
 ## 6. Future Developments
-**TODO**
+The following subsections outline possible future steps to address the limitations of the current approach, as described in [Section 5](#5-limitations).
+
+### 6.1 Increasing Dataset Size
 - A larger dataset is needed to make the model more robust - more repetitions and more subjects
 - 3D reconstruction from multiple point of view
+
+### 6.2 DL Model Improvements
 - A more accurate model for the skeleton extraction
 - Enhance the number of physical exercises that the model can recognize and discriminate
 - Increase the number of parameters for a more complete quality evaluation
-- ...
+
+### 6.3 Advanced Evaluation Models
+- not ruls based but advanced model?
 
 
-## 5. Authors
+## 7. Authors
 - Coluccino Edoardo (10630619)
 - Freddo Sara (10740747)
 - Girolami Francesca (10689084)
