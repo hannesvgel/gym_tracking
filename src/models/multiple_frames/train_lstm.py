@@ -90,15 +90,6 @@ test_ds  = make_ds(files_test,  labels_test,  shuffle=False)
 # todo: add hyperparameter tuning
 
 # 4. LSTM model
-'''model = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(30, 132)),
-    tf.keras.layers.LSTM(128, return_sequences=True),  # keep full sequence
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.LSTM(64, return_sequences=False),  # reduce to summary
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(64, activation="relu"),
-    tf.keras.layers.Dense(NUM_CLASSES, activation="softmax")
-])'''
 model = tf.keras.Sequential([
     tf.keras.layers.Input((30, 132)),
     Bidirectional(tf.keras.layers.LSTM(128, return_sequences=True)),
