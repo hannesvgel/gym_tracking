@@ -26,8 +26,8 @@ model = None  # Global variable to contain the loaded model
 
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
-MODEL_PATH = config["lstm_bidir_6cl_v1"]["path"]
-CLASSES = config["lstm_bidir_6cl_v1"]["class_names"]
+MODEL_PATH = config["lstm_bidir_6cl_v2"]["path"]
+CLASSES = config["lstm_bidir_6cl_v2"]["class_names"]
 
 # Model parameters
 SEQUENCE_LENGTH = 30    # Number of frames needed for a prediction
