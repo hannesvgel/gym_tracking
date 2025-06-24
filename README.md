@@ -282,16 +282,15 @@ Even though our model achieved 99% accuracy on the test set, occasional misclass
 The following subsections outline possible future steps to address the limitations of the current approach, as described in [Section 5](#5-limitations).
 
 ### 6.1 Increasing Dataset Size
-- A larger dataset is needed to make the model more robust - more repetitions and more subjects
-- 3D reconstruction from multiple point of view
+As already mentioned in [Section 5.3](#53-limited-dataset), increasing the size and diversity of the dataset is essential for improving model robustness. This includes collecting more repetitions and involving additional subjects, as well as exploring 3D reconstruction from multiple points of view. Since there are currently no freely available datasets large enough for our needs that we are not already using, the most effective approach is to record and curate additional data ourselves.
 
 ### 6.2 DL Model Improvements
-- A more accurate model for the skeleton extraction
-- Enhance the number of physical exercises that the model can recognize and discriminate
-- Increase the number of parameters for a more complete quality evaluation
+There are several ways to further enhance the deep learning models. With a larger and more diverse dataset, the final dense layer of the LSTM model could be expanded to classify additional exercise types, increasing the range of activities the system can recognize. The model itself could also be made more robust by increasing its size (e.g., adding more layers or parameters) and training on more data.
+
+Extensive hyperparameter tuning could further improve performance. For example, adjusting the number of frames fed into the model at once may help reduce overlap between exercises and improve classification accuracy. Previously, we also trained a CNN before switching to the LSTM; combining both approaches in an ensemble (e.g., using majority voting) could leverage the strengths of both architectures—CNNs for spatial features and LSTMs for temporal dynamics. Additionally, exploring alternative architectures, such as graph-based CNNs (e.g., ST-GCN for skeleton-based action recognition), could provide further improvements.
 
 ### 6.3 Advanced Evaluation Models
-- not ruls based but advanced model?
+Instead of relying on rule-based exercise evaluation, a more advanced model could be trained to assess exercise quality. However, this approach would require a large, well-annotated dataset containing examples of both correct and incorrect exercise executions for the model to learn from.
 
 
 ## 7. Authors
